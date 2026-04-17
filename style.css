@@ -1,36 +1,46 @@
+/* पूरी स्क्रीन के लिए सेटिंग */
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f7f6;
+    font-family: 'Arial', sans-serif;
+    background-color: #fcf4e8; /* हल्का क्रीम रंग */
     margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+/* ऊपर की पट्टी (Header) */
 header {
-    background-color: #e67e22;
+    background-color: #ff8c00; /* गहरा केसरिया */
     color: white;
-    padding: 20px;
+    width: 100%;
+    padding: 20px 0;
     text-align: center;
-}
-.welcome-card, .profile-card {
-    background: white;
-    padding: 25px;
-    margin: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-.input-field {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box;
-}
-.btn-primary {
-    background-color: #e67e22;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    width: 100%;
-    cursor: pointer;
+    font-size: 24px;
     font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-bottom: 4px solid #ffd700; /* सुनहरी लाइन */
+}
+
+/* जानकारी दिखाने वाला बॉक्स (Card) */
+.main-card {
+    background-color: white;
+    width: 90%;
+    max-width: 400px;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 1px solid #ff8c00;
+}
+
+h2 {
+    color: #ff8c00;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #555;
+    line-height: 1.6;
 }

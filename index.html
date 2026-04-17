@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>क्षत्रिय परिचायक</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>क्षत्रिय परिचायक</h1>
+    </header>
+
+    <div id="app">
+        <div id="login-card" class="welcome-card" style="text-align: center;">
+            <h2>स्वागत है!</h2>
+            <p>समाज से जुड़ने के लिए लॉगिन करें</p>
+            <br>
+            <button id="login-btn" class="btn-primary">Google के साथ लॉगिन करें</button>
+        </div>
+
+        <div id="profile-container" style="display: none;">
+            <div class="profile-card">
+                <h3>अपनी जानकारी भरें</h3>
+                <br>
+                <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम">
+                <input type="text" id="user-gotra" class="input-field" placeholder="गोत्र">
+                <input type="tel" id="user-phone" class="input-field" placeholder="मोबाइल नंबर">
+                <input type="text" id="user-village" class="input-field" placeholder="पैतृक गाँव/शहर">
+                <button id="save-profile-btn" class="btn-primary">प्रोफाइल सुरक्षित करें</button>
+            </div>
+        </div>
+
+        <div id="dashboard-container" style="display: none; padding: 10px;">
+            <h2 style="color: #e67e22; text-align: center;">समाज के सदस्य</h2>
+            <hr>
+            <div id="users-list">
+                </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

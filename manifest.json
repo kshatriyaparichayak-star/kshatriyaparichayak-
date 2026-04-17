@@ -1,0 +1,15 @@
+{
+  "name": "क्षत्रिय परिचायक",
+  "short_name": "परिचायक",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fcf4e8",
+  "theme_color": "#ff8c00",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1041/1041916.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

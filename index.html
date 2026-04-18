@@ -3,15 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>क्षत्रिय परिचायक</title>
+    <title>राजपूत - क्षत्रिय परिचायक</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    <style>
+        /* सर्च और लॉगआउट के लिए कुछ एक्स्ट्रा स्टाइल */
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 25px;
+            border: 1px solid #ff8c00;
+            outline: none;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .logout-link {
+            color: #fff;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>क्षत्रिय परिचायक</h1>
+    <header style="display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative;">
+        <button id="logout-btn-header" class="logout-link" style="position: absolute; right: 10px; top: 10px; display: none;">निकास (Logout)</button>
+        
+        <img src="logo.png" alt="राजपूत लोगो" style="width: 80px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+        <h1 style="margin: 0; font-size: 24px;">क्षत्रिय परिचायक</h1>
     </header>
 
     <div id="app">
@@ -24,20 +50,22 @@
 
         <div id="profile-container" style="display: none;">
             <div class="profile-card" style="margin: 20px; padding: 20px; background: white; border-radius: 15px; border-left: 5px solid #ff8c00;">
-                <h3>अपनी जानकारी भरें</h3>
+                <h3 style="color: #ff8c00;">अपनी जानकारी भरें</h3>
                 <br>
-                <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-                <input type="text" id="user-gotra" class="input-field" placeholder="गोत्र" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-                <input type="tel" id="user-phone" class="input-field" placeholder="मोबाइल नंबर" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-                <input type="text" id="user-village" class="input-field" placeholder="पैतृक गाँव/शहर" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-                <button id="save-profile-btn" class="btn-primary" style="width: 100%;">प्रोफाइल सुरक्षित करें</button>
+                <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                <input type="text" id="user-gotra" class="input-field" placeholder="गोत्र" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                <input type="tel" id="user-phone" class="input-field" placeholder="मोबाइल नंबर" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                <input type="text" id="user-village" class="input-field" placeholder="पैतृक गाँव/शहर" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                <button id="save-profile-btn" class="btn-primary" style="width: 100%; padding: 12px;">प्रोफाइल सुरक्षित करें</button>
             </div>
         </div>
 
         <div id="dashboard-container" style="display: none; padding: 10px;">
-            <h2 style="color: #ff8c00; text-align: center;">समाज के सदस्य</h2>
-            <hr>
+            <h2 style="color: #ff8c00; text-align: center; margin-bottom: 5px;">समाज के सदस्य</h2>
             
+            <input type="text" id="searchInput" class="search-box" placeholder="नाम या गाँव से खोजें...">
+            
+            <hr style="border: 0.5px solid #eee;">
             <div id="users-list">
                 </div>
         </div>

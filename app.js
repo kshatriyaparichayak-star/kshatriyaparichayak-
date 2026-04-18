@@ -5,20 +5,25 @@ import { doc, setDoc, getDoc, collection, getDocs, deleteDoc, onSnapshot } from 
 // --- एडमिन ईमेल ---
 const adminEmail = "kshatriyaparichayak@gmail.com"; 
 
-// --- Cloudinary फोटो अपलोड ---
+// --- Cloudinary फोटो अपलोड (Updated with your Cloud Name) ---
 async function uploadToFreeCloud(file) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'unsigned_preset'); 
     try {
-        const response = await fetch(`https://api.cloudinary.com/v1_1/dzsh8xvre/image/upload`, {
+        // dzwsmzvmd आपका नया क्लाउड नाम है
+        const response = await fetch(`https://api.cloudinary.com/v1_1/dzwsmzvmd/image/upload`, {
             method: 'POST',
             body: formData
         });
+        
+        if (!response.ok) throw new Error("Upload Failed");
+        
         const result = await response.json();
         return result.secure_url;
     } catch (err) {
-        throw new Error("फोटो अपलोड विफल");
+        console.error("Cloudinary Error:", err);
+        throw new Error("फोटो अपलोड विफल! कृपया Cloudinary सेटिंग चेक करें।");
     }
 }
 
@@ -82,7 +87,7 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
             uid: user.uid
         };
         await setDoc(doc(db, "users", user.uid), data);
-        alert("प्रोफाइल सुरक्षित!");
+        alert("प्रोफाइल सफलतापूर्वक सुरक्षित!");
         showDashboard();
     } catch (e) {
         alert("त्रुटि: " + e.message);

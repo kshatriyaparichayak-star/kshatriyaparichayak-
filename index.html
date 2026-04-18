@@ -8,75 +8,72 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <style>
-        /* सर्च और लॉगआउट के लिए कुछ एक्स्ट्रा स्टाइल */
-        .search-box {
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
-            border-radius: 25px;
-            border: 1px solid #ff8c00;
-            outline: none;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-        .logout-link {
-            color: #fff;
-            background: rgba(255,255,255,0.2);
-            padding: 5px 12px;
-            border-radius: 15px;
-            text-decoration: none;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-        }
+        .search-box { width: 100%; padding: 12px; margin: 15px 0; border-radius: 25px; border: 1px solid #ff8c00; outline: none; box-sizing: border-box; }
+        .logout-link { color: #fff; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px; text-decoration: none; font-size: 14px; cursor: pointer; border: none; }
+        .form-section { border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px; font-weight: bold; color: #ff8c00; }
+        .input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
     <header style="display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative;">
-        <button id="logout-btn-header" class="logout-link" style="position: absolute; right: 10px; top: 10px; display: none;">निकास (Logout)</button>
-        
-        <img src="logo.png" alt="राजपूत लोगो" style="width: 80px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-        <h1 style="margin: 0; font-size: 24px;">क्षत्रिय परिचायक</h1>
+        <button id="logout-btn-header" class="logout-link" style="position: absolute; right: 10px; top: 10px; display: none;">निकास</button>
+        <img src="logo.png" alt="logo" style="width: 70px; height: auto; margin-bottom: 5px;">
+        <h1 style="margin: 0; font-size: 22px;">क्षत्रिय परिचायक</h1>
     </header>
 
     <div id="app">
         <div id="login-card" class="welcome-card" style="text-align: center; margin: 20px; padding: 20px; border-radius: 15px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
             <h2>स्वागत है!</h2>
-            <p>समाज से जुड़ने के लिए लॉगिन करें</p>
-            <br>
-            <button id="login-btn" class="btn-primary">Google के साथ लॉगिन करें</button>
+            <p>समाज से जुड़ने के लिए लॉगिन करें</p>
+            <button id="login-btn" class="btn-primary" style="margin-top:15px;">Google लॉगिन</button>
         </div>
 
-        <div id="profile-container" style="display: none;">
-            <div class="profile-card" style="margin: 20px; padding: 20px; background: white; border-radius: 15px; border-left: 5px solid #ff8c00;">
-                <h3 style="color: #ff8c00;">अपनी जानकारी भरें</h3>
-                <br>
-                <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
-                <input type="text" id="user-gotra" class="input-field" placeholder="गोत्र" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
-                <input type="tel" id="user-phone" class="input-field" placeholder="मोबाइल नंबर" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
-                <input type="text" id="user-village" class="input-field" placeholder="पैतृक गाँव/शहर" style="width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px;">
-                <button id="save-profile-btn" class="btn-primary" style="width: 100%; padding: 12px;">प्रोफाइल सुरक्षित करें</button>
+        <div id="profile-container" style="display: none; padding: 15px;">
+            <div class="profile-card" style="background: white; padding: 20px; border-radius: 15px; border-top: 5px solid #ff8c00;">
+                <h3 style="color: #ff8c00; text-align: center;">सदस्यता फॉर्म</h3>
+                
+                <p style="font-size: 12px; color: grey;">प्रोफाइल फोटो लिंक (अभी के लिए URL डालें)</p>
+                <input type="text" id="user-photo" class="input-field" placeholder="फोटो का लिंक (Optional)">
+                
+                <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम *">
+                <input type="text" id="user-father" class="input-field" placeholder="पिता का नाम">
+                <p style="font-size: 12px; color: grey;">जन्म तिथि (DOB)</p>
+                <input type="date" id="user-dob" class="input-field">
+                
+                <input type="text" id="user-gotra" class="input-field" placeholder="गोत्र *">
+                <input type="tel" id="user-phone" class="input-field" placeholder="मोबाइल नंबर *">
+                
+                <select id="user-blood" class="input-field">
+                    <option value="">ब्लड ग्रुप चुनें</option>
+                    <option value="A+">A+</option><option value="A-">A-</option>
+                    <option value="B+">B+</option><option value="B-">B-</option>
+                    <option value="O+">O+</option><option value="O-">O-</option>
+                    <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                </select>
+
+                <input type="text" id="user-profession" class="input-field" placeholder="व्यवसाय (Profession)">
+
+                <div class="form-section">मूल निवास</div>
+                <input type="text" id="mul-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
+                <input type="text" id="mul-dist" class="input-field" placeholder="जिला">
+                <input type="text" id="mul-state" class="input-field" placeholder="राज्य">
+
+                <div class="form-section">वर्तमान निवास</div>
+                <input type="text" id="cur-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
+                <input type="text" id="cur-dist" class="input-field" placeholder="जिला *">
+                <input type="text" id="cur-state" class="input-field" placeholder="राज्य">
+
+                <button id="save-profile-btn" class="btn-primary" style="width: 100%; padding: 12px; background: #ff8c00; border: none; color: white; border-radius: 8px; font-weight: bold;">प्रोफाइल सुरक्षित करें</button>
             </div>
         </div>
 
         <div id="dashboard-container" style="display: none; padding: 10px;">
-            <h2 style="color: #ff8c00; text-align: center; margin-bottom: 5px;">समाज के सदस्य</h2>
-            
-            <input type="text" id="searchInput" class="search-box" placeholder="नाम या गाँव से खोजें...">
-            
-            <hr style="border: 0.5px solid #eee;">
-            <div id="users-list">
-                </div>
+            <input type="text" id="searchInput" class="search-box" placeholder="नाम, गाँव या जिला से खोजें...">
+            <div id="users-list"></div>
         </div>
     </div>
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
-    
     <script type="module" src="app.js"></script>
 </body>
 </html>

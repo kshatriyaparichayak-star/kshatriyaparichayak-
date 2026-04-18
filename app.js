@@ -2,72 +2,59 @@ import { auth, db, provider } from './firebase-config.js';
 import { signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 1. यूजर के लॉगिन स्टेटस पर नजर रखें
+// उम्र निकालने का फंक्शन
+function calculateAge(birthDate) {
+    if(!birthDate) return "N/A";
+    const dob = new Date(birthDate);
+    const diff = Date.now() - dob.getTime();
+    const ageDate = new Date(diff);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // चेक करें कि क्या यूजर की प्रोफाइल पहले से बनी है
         const userDoc = await getDoc(doc(db, "users", user.uid));
-        
-        if (userDoc.exists()) {
-            // अगर प्रोफाइल है, तो सीधा डैशबोर्ड दिखाओ
-            showDashboard();
-        } else {
-            // अगर प्रोफाइल नहीं है, तो फॉर्म दिखाओ
+        if (userDoc.exists()) { showDashboard(); } 
+        else { 
             document.getElementById('login-card').style.display = 'none';
-            document.getElementById('profile-container').style.display = 'block';
+            document.getElementById('profile-container').style.display = 'block'; 
         }
     } else {
-        // अगर लॉगिन नहीं है
         document.getElementById('login-card').style.display = 'block';
         document.getElementById('dashboard-container').style.display = 'none';
-        document.getElementById('profile-container').style.display = 'none';
-        document.getElementById('logout-btn-header').style.display = 'none';
     }
 });
 
-// 2. लॉगिन बटन फंक्शन
-document.getElementById('login-btn').addEventListener('click', async () => {
-    try {
-        await signInWithPopup(auth, provider);
-    } catch (error) {
-        alert("लॉगिन एरर: " + error.message);
-    }
-});
+document.getElementById('login-btn').addEventListener('click', () => signInWithPopup(auth, provider));
 
-// 3. डेटा सुरक्षित (Save) करने का फंक्शन
 document.getElementById('save-profile-btn').addEventListener('click', async () => {
     const user = auth.currentUser;
-    if (!user) return;
-
-    const name = document.getElementById('user-name').value.trim();
-    const gotra = document.getElementById('user-gotra').value.trim();
-    const phone = document.getElementById('user-phone').value.trim();
-    const village = document.getElementById('user-village').value.trim();
-
-    if (!name || !gotra || !phone || !village) {
-        alert("कृपया सभी जानकारी भरें");
-        return;
-    }
-
-    const userData = {
-        name: name,
-        gotra: gotra,
-        phone: phone,
-        village: village,
-        uid: user.uid,
-        timestamp: new Date()
+    const data = {
+        photo: document.getElementById('user-photo').value,
+        name: document.getElementById('user-name').value,
+        father: document.getElementById('user-father').value,
+        dob: document.getElementById('user-dob').value,
+        gotra: document.getElementById('user-gotra').value,
+        phone: document.getElementById('user-phone').value,
+        blood: document.getElementById('user-blood').value,
+        profession: document.getElementById('user-profession').value,
+        mul_address: { 
+            gram: document.getElementById('mul-gram').value, 
+            dist: document.getElementById('mul-dist').value, 
+            state: document.getElementById('mul-state').value 
+        },
+        cur_address: { 
+            gram: document.getElementById('cur-gram').value, 
+            dist: document.getElementById('cur-dist').value, 
+            state: document.getElementById('cur-state').value 
+        },
+        uid: user.uid
     };
-
-    try {
-        await setDoc(doc(db, "users", user.uid), userData);
-        alert("प्रोफाइल सुरक्षित हो गई!");
-        showDashboard();
-    } catch (e) {
-        alert("त्रुटि: " + e.message);
-    }
+    await setDoc(doc(db, "users", user.uid), data);
+    alert("प्रोफाइल सुरक्षित!");
+    showDashboard();
 });
 
-// 4. डैशबोर्ड (सदस्यों की लिस्ट) दिखाने का फंक्शन
 async function showDashboard() {
     document.getElementById('login-card').style.display = 'none';
     document.getElementById('profile-container').style.display = 'none';
@@ -75,50 +62,27 @@ async function showDashboard() {
     document.getElementById('logout-btn-header').style.display = 'block';
 
     const list = document.getElementById('users-list');
-    list.innerHTML = "<p style='text-align:center;'>सदस्यों की सूची लोड हो रही है...</p>";
-
-    try {
-        const snapshot = await getDocs(collection(db, "users"));
-        list.innerHTML = "";
-        
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            list.innerHTML += `
-                <div class="profile-card" style="border-left: 5px solid #ff8c00; margin-bottom: 15px; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <h3 style="margin:0; color: #333;">${d.name}</h3>
-                    <p style="margin:8px 0; font-size:14px; color: #666;">
-                        🚩 <b>गोत्र:</b> ${d.gotra} <br>
-                        🏠 <b>गाँव:</b> ${d.village}
-                    </p>
-                    <a href="tel:${d.phone}" style="display: inline-block; text-decoration:none; color:white; background:#27ae60; padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight:bold;">📞 कॉल करें</a>
-                </div>`;
-        });
-    } catch (err) {
-        console.error("Data load error:", err);
-        list.innerHTML = "<p>डेटा लोड करने में समस्या आई।</p>";
-    }
-}
-
-// 5. सर्च फिल्टर (नाम या गाँव से खोजें)
-document.getElementById('searchInput').addEventListener('keyup', (e) => {
-    const term = e.target.value.toLowerCase();
-    const cards = document.querySelectorAll('.profile-card');
+    const snapshot = await getDocs(collection(db, "users"));
+    list.innerHTML = "";
     
-    cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        if (text.includes(term)) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-});
+    snapshot.forEach(doc => {
+        const d = doc.data();
+        const age = calculateAge(d.dob);
+        const userImg = d.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
-// 6. लॉगआउट बटन
-document.getElementById('logout-btn-header').addEventListener('click', () => {
-    if (confirm("क्या आप लॉगआउट करना चाहते हैं?")) {
-        signOut(auth).then(() => {
-            location.reload();
-        });
-    }
-});
+        list.innerHTML += `
+            <div class="profile-card" style="margin-bottom:15px; padding:15px; background:white; border-radius:12px; display:flex; gap:15px; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                <img src="${userImg}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid #ff8c00;">
+                <div style="flex:1;">
+                    <h3 style="margin:0;">${d.name}</h3>
+                    <p style="margin:2px 0; font-size:13px; color:#555;">पिता: ${d.father || '---'}</p>
+                    <p style="margin:2px 0; font-size:12px;">🚩 ${d.gotra} | 🎂 उम्र: ${age} | 🩸 ${d.blood || '?'}</p>
+                    <p style="margin:2px 0; font-size:12px; color:#e67e22;">📍 वर्तमान जिला: ${d.cur_address?.dist || '---'}</p>
+                    <p style="margin:2px 0; font-size:12px; font-style:italic;">💼 ${d.profession || '---'}</p>
+                    <div style="margin-top:8px;">
+                        <a href="https://wa.me/${d.phone}" target="_blank" style="text-decoration:none; background:#25D366; color:white; padding:5px 12px; border-radius:15px; font-size:12px;">💬 मैसेज करें</a>
+                    </div>
+                </div>
+            </div>`;
+    });
+}

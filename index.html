@@ -13,9 +13,18 @@
         .edit-btn { background: #3498db; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
         .form-section { border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px; font-weight: bold; color: #ff8c00; }
         .input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; transition: all 0.3s; }
+        
         /* लॉक किए गए फील्ड का स्टाइल */
         .input-field:read-only, .input-field:disabled { background: #f0f0f0 !important; color: #888; border: 1px solid #ccc; cursor: not-allowed; }
         input[type="file"] { padding: 8px; background: #fff3e0; border: 1px dashed #ff8c00; }
+
+        /* नोटिस बोर्ड स्टाइल */
+        #notice-bar { background: linear-gradient(90deg, #ff8c00, #e67e22); padding: 12px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        /* एडमिन पैनल स्टाइल */
+        #admin-tools { display: none; background: #fff; padding: 15px; border: 2px solid #ff8c00; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .admin-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; font-family: inherit; }
+        .admin-btn { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -75,11 +84,25 @@
         </div>
 
         <div id="dashboard-container" style="display: none; padding: 10px;">
+            
+            <div id="notice-bar">
+                <div id="notice-display" style="color: white; font-weight: bold; font-size: 14px; text-align: center;">
+                    सूचना लोड हो रही है...
+                </div>
+            </div>
+
+            <div id="admin-tools">
+                <h4 style="margin:0 0 10px 0; color:#ff8c00; display: flex; align-items: center;">🚩 एडमिन कंट्रोल पैनल</h4>
+                <textarea id="notice-input" class="admin-input" rows="2" placeholder="समाज के लिए नई सूचना यहाँ लिखें..."></textarea>
+                <button onclick="updateNotice()" class="admin-btn">Update Notice Board</button>
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <h2 style="color: #ff8c00; margin: 0; font-size: 18px;">समाज के सदस्य</h2>
                 <button id="edit-profile-btn" class="edit-btn">✏️ प्रोफाइल बदलें</button>
             </div>
             <input type="text" id="searchInput" class="search-box" placeholder="नाम, गाँव या जिला से खोजें...">
+            
             <div id="users-list"></div>
         </div>
     </div>

@@ -12,8 +12,9 @@
         .logout-link { color: #fff; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px; text-decoration: none; font-size: 14px; cursor: pointer; border: none; }
         .edit-btn { background: #3498db; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
         .form-section { border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px; font-weight: bold; color: #ff8c00; }
-        .input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
-        /* फोटो अपलोड बटन का स्टाइल */
+        .input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; transition: all 0.3s; }
+        /* लॉक किए गए फील्ड का स्टाइल */
+        .input-field:read-only, .input-field:disabled { background: #f0f0f0 !important; color: #888; border: 1px solid #ccc; cursor: not-allowed; }
         input[type="file"] { padding: 8px; background: #fff3e0; border: 1px dashed #ff8c00; }
     </style>
 </head>
@@ -38,7 +39,9 @@
                 
                 <p style="font-size: 13px; color: #333; margin-bottom: 5px; font-weight: 600;">अपनी प्रोफाइल फोटो चुनें</p>
                 <input type="file" id="user-photo-file" class="input-field" accept="image/*">
-                <input type="hidden" id="user-photo-url"> <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम *">
+                <input type="hidden" id="user-photo-url">
+                
+                <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम *">
                 <input type="text" id="user-father" class="input-field" placeholder="पिता का नाम">
                 <p style="font-size: 12px; color: grey; margin-top: 5px;">जन्म तिथि (उम्र के लिए)</p>
                 <input type="date" id="user-dob" class="input-field">
@@ -56,12 +59,12 @@
 
                 <input type="text" id="user-profession" class="input-field" placeholder="व्यवसाय (Profession)">
 
-                <div class="form-section">मूल निवास</div>
+                <div class="form-section">मूल निवास (परिवर्तित नहीं होगा)</div>
                 <input type="text" id="mul-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
                 <input type="text" id="mul-dist" class="input-field" placeholder="जिला">
                 <input type="text" id="mul-state" class="input-field" placeholder="राज्य">
 
-                <div class="form-section">वर्तमान निवास</div>
+                <div class="form-section">वर्तमान निवास (बदल सकते हैं)</div>
                 <input type="text" id="cur-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
                 <input type="text" id="cur-dist" class="input-field" placeholder="जिला *">
                 <input type="text" id="cur-state" class="input-field" placeholder="राज्य">

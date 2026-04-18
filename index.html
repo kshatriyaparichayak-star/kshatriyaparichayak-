@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <style>
-        .search-box { width: 100%; padding: 12px; margin: 15px 0; border-radius: 25px; border: 1px solid #ff8c00; outline: none; box-sizing: border-box; }
+        .search-box { width: 100%; padding: 12px; margin: 10px 0; border-radius: 25px; border: 1px solid #ff8c00; outline: none; box-sizing: border-box; }
         .logout-link { color: #fff; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px; text-decoration: none; font-size: 14px; cursor: pointer; border: none; }
+        .edit-btn { background: #3498db; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
         .form-section { border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px; font-weight: bold; color: #ff8c00; }
         .input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
     </style>
@@ -33,8 +34,8 @@
             <div class="profile-card" style="background: white; padding: 20px; border-radius: 15px; border-top: 5px solid #ff8c00;">
                 <h3 style="color: #ff8c00; text-align: center;">सदस्यता फॉर्म</h3>
                 
-                <p style="font-size: 12px; color: grey;">प्रोफाइल फोटो लिंक (अभी के लिए URL डालें)</p>
-                <input type="text" id="user-photo" class="input-field" placeholder="फोटो का लिंक (Optional)">
+                <p style="font-size: 12px; color: grey;">प्रोफाइल फोटो लिंक</p>
+                <input type="text" id="user-photo" class="input-field" placeholder="फोटो का URL (Optional)">
                 
                 <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम *">
                 <input type="text" id="user-father" class="input-field" placeholder="पिता का नाम">
@@ -65,10 +66,15 @@
                 <input type="text" id="cur-state" class="input-field" placeholder="राज्य">
 
                 <button id="save-profile-btn" class="btn-primary" style="width: 100%; padding: 12px; background: #ff8c00; border: none; color: white; border-radius: 8px; font-weight: bold;">प्रोफाइल सुरक्षित करें</button>
+                <button id="cancel-edit-btn" style="display:none; width:100%; margin-top:10px; background:none; border:none; color:grey; font-size:14px; cursor:pointer;">वापस डैशबोर्ड पर जाएँ</button>
             </div>
         </div>
 
         <div id="dashboard-container" style="display: none; padding: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: #ff8c00; margin: 0; font-size: 18px;">समाज के सदस्य</h2>
+                <button id="edit-profile-btn" class="edit-btn">✏️ प्रोफाइल बदलें</button>
+            </div>
             <input type="text" id="searchInput" class="search-box" placeholder="नाम, गाँव या जिला से खोजें...">
             <div id="users-list"></div>
         </div>

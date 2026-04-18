@@ -2,21 +2,23 @@ import { auth, db, provider } from './firebase-config.js';
 import { signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// --- 1. फोटो को कंप्रेस और फ्री सर्वर पर अपलोड करने का फंक्शन ---
 async function uploadToFreeCloud(file) {
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('file', file);
+    formData.append('upload_preset', 'unsigned_preset'); // मैंने इसे आसान बनाया है
 
-    // हम ImgBB की फ्री API का इस्तेमाल करेंगे (यह मेरा एक अस्थाई की-Key है)
-    // आप बाद में अपनी खुद की भी बना सकते हैं
-    const apiKey = '0186987169128f73441a7788b776a39d'; 
-    
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: 'POST',
-        body: formData
-    });
-    const result = await response.json();
-    return result.data.url; // यह हमें फोटो का लिंक दे देगा
+    try {
+        // 'demo' की जगह आप अपनी क्लाउड आईडी भी डाल सकते हैं, अभी चेक करने के लिए यह काम करेगा
+        const response = await fetch(`https://api.cloudinary.com/v1_1/dzsh8xvre/image/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        return result.secure_url;
+    } catch (err) {
+        console.error("Upload Error:", err);
+        throw err;
+    }
 }
 
 function calculateAge(birthDate) {
@@ -55,7 +57,6 @@ onAuthStateChanged(auth, async (user) => {
 
 document.getElementById('login-btn').addEventListener('click', () => signInWithPopup(auth, provider));
 
-// --- 2. डेटा सुरक्षित करना (बिना Firebase Storage के) ---
 document.getElementById('save-profile-btn').addEventListener('click', async () => {
     const user = auth.currentUser;
     if(!user) return;
@@ -64,12 +65,11 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
     const photoInput = document.getElementById('user-photo-file');
     let photoURL = document.getElementById('user-photo-url').value;
 
-    saveBtn.innerText = "फोटो अपलोड हो रही है...";
+    saveBtn.innerText = "प्रोफाइल फोटो सुरक्षित हो रही है...";
     saveBtn.disabled = true;
 
     try {
         if (photoInput.files[0]) {
-            // Firebase की जगह फ्री क्लाउड पर अपलोड करें
             photoURL = await uploadToFreeCloud(photoInput.files[0]);
         }
 
@@ -96,12 +96,11 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
         };
 
         await setDoc(doc(db, "users", user.uid), data);
-        alert("सफलतापूर्वक सुरक्षित!");
+        alert("बधाई हो! आपकी प्रोफाइल सुरक्षित हो गई है।");
         document.getElementById('user-photo-file').value = "";
         showDashboard();
     } catch (e) {
-        alert("त्रुटि: फोटो अपलोड सर्वर व्यस्त है, कृपया दोबारा प्रयास करें।");
-        console.error(e);
+        alert("त्रुटि: फोटो अपलोड नहीं हो सकी। कृपया इंटरनेट चेक करें।");
     } finally {
         saveBtn.innerText = "प्रोफाइल सुरक्षित करें";
         saveBtn.disabled = false;
@@ -115,7 +114,7 @@ async function showDashboard() {
     document.getElementById('logout-btn-header').style.display = 'block';
 
     const list = document.getElementById('users-list');
-    list.innerHTML = "<p style='text-align:center;'>लोड हो रहा है...</p>";
+    list.innerHTML = "<p style='text-align:center;'>समाज की सूची लोड हो रही है...</p>";
 
     const snapshot = await getDocs(collection(db, "users"));
     list.innerHTML = "";
@@ -126,14 +125,14 @@ async function showDashboard() {
         const userImg = d.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
         list.innerHTML += `
-            <div class="profile-card" style="margin-bottom:15px; padding:15px; background:white; border-radius:12px; display:flex; gap:15px; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                <img src="${userImg}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid #ff8c00;">
+            <div class="profile-card" style="margin-bottom:15px; padding:15px; background:white; border-radius:12px; display:flex; gap:15px; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); border-left: 5px solid #ff8c00;">
+                <img src="${userImg}" style="width:75px; height:75px; border-radius:50%; object-fit:cover; border:2px solid #ff8c00; background: #eee;">
                 <div style="flex:1;">
-                    <h3 style="margin:0; font-size:18px;">${d.name}</h3>
-                    <p style="margin:2px 0; font-size:12px; color:#666;">🚩 ${d.gotra} | 🎂 उम्र: ${age}</p>
-                    <p style="margin:2px 0; font-size:12px; color:#e67e22;">📍 जिला: ${d.cur_address?.dist || '---'}</p>
-                    <div style="margin-top:8px;">
-                        <a href="https://wa.me/${d.phone}" target="_blank" style="text-decoration:none; background:#25D366; color:white; padding:5px 12px; border-radius:15px; font-size:12px; display:inline-block;">💬 व्हाट्सएप</a>
+                    <h3 style="margin:0; color: #333;">${d.name}</h3>
+                    <p style="margin:2px 0; font-size:13px; color:#555;">🚩 ${d.gotra} | 🎂 ${age} वर्ष</p>
+                    <p style="margin:2px 0; font-size:12px; color:#e67e22; font-weight: bold;">📍 ${d.cur_address?.dist || '---'}</p>
+                    <div style="margin-top:10px;">
+                        <a href="https://wa.me/91${d.phone}" target="_blank" style="text-decoration:none; background:#25D366; color:white; padding:6px 15px; border-radius:20px; font-size:12px; font-weight: bold; display:inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">💬 व्हाट्सएप</a>
                     </div>
                 </div>
             </div>`;

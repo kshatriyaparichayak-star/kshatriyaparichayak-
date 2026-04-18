@@ -119,6 +119,8 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
 
         await setDoc(doc(db, "users", user.uid), data);
         alert("जानकारी सुरक्षित हो गई!");
+        document.getElementById('user-photo-file').value = ""; // फाइल इनपुट को खाली करने के लिए
+
         showDashboard();
     } catch (e) {
         alert("त्रुटि: " + e.message);

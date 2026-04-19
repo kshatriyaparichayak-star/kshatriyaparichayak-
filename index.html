@@ -20,12 +20,12 @@
         <div class="menu-links">
             <a href="#" onclick="openModal('about-modal'); toggleMenu();"><i class="fa-solid fa-circle-info"></i> About Us</a>
             <a href="#" onclick="openModal('terms-modal'); toggleMenu();"><i class="fa-solid fa-file-contract"></i> Terms & Conditions</a>
-            <a href="#" onclick="openModal('privacy-modal'); toggleMenu();"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+            <a href="#" onclick="openModal('privacy-modal'); toggleMenu();"><i class="fa-solid fa-user-shield"></i> Privacy Policy</a>
             <a href="#" onclick="openModal('faq-modal'); toggleMenu();"><i class="fa-solid fa-circle-question"></i> FAQ</a>
             <a href="#" onclick="openModal('contact-modal'); toggleMenu();"><i class="fa-solid fa-phone"></i> Contact Us</a>
             
             <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
-            <a href="#" id="menu-lang-toggle"><i class="fa-solid fa-language"></i> भाषा / Language</a>
+            <a href="#" id="menu-lang-toggle" onclick="changeLanguage()"><i class="fa-solid fa-language"></i> भाषा / Language</a>
         </div>
     </div>
 
@@ -36,7 +36,7 @@
             <span class="app-name">क्षत्रिय परिचायक</span>
         </div>
         <div class="header-right" style="display: flex; align-items: center;">
-            <button id="lang-toggle-btn" class="header-lang-btn">अ / A</button>
+            <button id="lang-toggle-btn" class="header-lang-btn" onclick="changeLanguage()">अ / A</button>
             <div class="notif-box" onclick="openModal('notif-modal')">
                 <i class="fa-solid fa-bell"></i>
                 <span class="notif-badge" id="notif-count">0</span>
@@ -208,7 +208,7 @@
 
     <div id="privacy-modal" class="custom-modal">
         <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
-        <h3><i class="fa-solid fa-shield-halved"></i> Privacy Policy</h3>
+        <h3><i class="fa-solid fa-user-shield"></i> Privacy Policy</h3>
         <div class="modal-body-scroll">
             <p>आपकी गोपनीयता हमारे लिए महत्वपूर्ण है।</p>
             <p><b>1. हम कौन-सी जानकारी लेते हैं:</b> नाम, मोबाइल नंबर, पता, गोत्र आदि।</p>
@@ -237,7 +237,7 @@
         <h3><i class="fa-solid fa-phone"></i> Contact Us</h3>
         <div class="modal-body-scroll" style="text-align: center;">
             <p>अगर आपको कोई सवाल या सुझाव है, तो हमसे बेझिझक संपर्क करें।</p>
-            <h3 style="color: var(--royal-red); margin: 15px 0;">📞 +91 9793259359</h3>
+            <a href="tel:+919793259359" style="color: var(--royal-red); font-size: 20px; font-weight: bold; text-decoration: none; display: block; margin: 15px 0;">📞 +91 9793259359</a>
             <p><b>📧 kshatriyaparichayak@gmail.com</b></p>
             <p style="margin-top: 15px;">आपके सुझाव हमारे लिए महत्वपूर्ण हैं।<br>धन्यवाद 🙏</p>
         </div>
@@ -276,5 +276,14 @@
             modals.forEach(m => m.style.display = 'none');
         }
     </script>
+    
+    <div id="google_translate_element" style="display:none;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'hi', includedLanguages: 'en,hi', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>

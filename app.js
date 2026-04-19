@@ -38,7 +38,6 @@ async function setupNotifications(userUid) {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
             const messaging = getMessaging();
-            // आपकी VAPID Key
             const token = await getToken(messaging, { vapidKey: 'BDJ7sjXj2uKwSKzbc2zkqMQqSz2SExNWVgpBq1QoBmObtZsy5Ag8QtphQzHLODcdZb8jzZhLlE63_SRx-OBO4qQ' });
             if (token) {
                 await setDoc(doc(db, "users", userUid), { fcmToken: token }, { merge: true });
@@ -57,8 +56,8 @@ onAuthStateChanged(auth, async (user) => {
 
     if (user) {
         if (header) header.style.display = 'flex';
-        setupNotifications(user.uid); // लॉगिन होते ही नोटिफिकेशन ऑन करें
-        listenForAlerts(); // अलर्ट सुनना शुरू करें
+        setupNotifications(user.uid);
+        listenForAlerts();
 
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) { 
@@ -73,7 +72,6 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById('dashboard-container').style.display = 'none';
         document.getElementById('profile-container').style.display = 'none';
 
-        // इनवाइट कोड के बिना लॉगिन बटन छिपा दें (Admin Master Key: ?ref=admin)
         if (!inviteCode && inviteCode !== 'admin') {
             loginBtn.style.display = 'none';
             errorMsg.style.display = 'block';
@@ -112,12 +110,8 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
             father: document.getElementById('user-father').value, dob: document.getElementById('user-dob').value,
             gotra: document.getElementById('user-gotra').value, phone: document.getElementById('user-phone').value,
             blood: document.getElementById('user-blood').value, profession: document.getElementById('user-profession').value,
-            mul_address: {
-                gram: document.getElementById('mul-gram').value, dist: document.getElementById('mul-dist').value, state: document.getElementById('mul-state').value
-            },
-            cur_address: {
-                gram: document.getElementById('cur-gram').value, dist: document.getElementById('cur-dist').value, state: document.getElementById('cur-state').value
-            },
+            mul_address: { gram: document.getElementById('mul-gram').value, dist: document.getElementById('mul-dist').value, state: document.getElementById('mul-state').value },
+            cur_address: { gram: document.getElementById('cur-gram').value, dist: document.getElementById('cur-dist').value, state: document.getElementById('cur-state').value },
             uid: user.uid, timestamp: Date.now(), inviteCount: invites, email: user.email
         };
         
@@ -131,7 +125,7 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
 });
 
 // --- 5. डैशबोर्ड रेंडरिंग ---
-let allUsersData = {}; // लोकल डेटा सेव करने के लिए
+let allUsersData = {};
 
 async function showDashboard() {
     document.getElementById('login-card').style.display = 'none';
@@ -161,15 +155,14 @@ async function showDashboard() {
     document.getElementById('display-my-city').innerText = myData.cur_address?.dist || "शहर";
     document.getElementById('my-profile-pic').src = myData.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
-    // सदस्यों की लिस्ट (View Details और Admin Delete के साथ)
     const qMembers = query(collection(db, "users"), orderBy("timestamp", "desc"));
     onSnapshot(qMembers, (snap) => {
         const list = document.getElementById('latest-members-list');
         list.innerHTML = "";
         snap.forEach(s => {
             const d = s.data();
-            allUsersData[d.uid] = d; // डेटा लोकल सेव किया
-            if(d.uid === user.uid) return; // खुद का कार्ड लिस्ट में न दिखाएं
+            allUsersData[d.uid] = d; 
+            if(d.uid === user.uid) return;
 
             const card = document.createElement('div');
             card.className = "profile-card";
@@ -192,7 +185,6 @@ async function showDashboard() {
         });
     });
 
-    // सर्च
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
         const cards = document.querySelectorAll('.profile-card');
@@ -205,7 +197,7 @@ async function showDashboard() {
     new Swiper('.swiper-notice', { loop: true, pagination: { el: '.swiper-pagination' } });
 }
 
-// --- 6. व्यू डिटेल्स (पॉप-अप लॉजिक) ---
+// --- 6. व्यू डिटेल्स ---
 window.openMemberDetails = (uid) => {
     const d = allUsersData[uid];
     if(!d) return;
@@ -237,7 +229,7 @@ window.openMemberDetails = (uid) => {
     document.getElementById('member-detail-modal').style.display = 'block';
 };
 
-// --- 7. एडमिन पॉवर: सदस्य डिलीट करना ---
+// --- 7. एडमिन पॉवर ---
 window.deleteMember = async (uid) => {
     if(confirm("चेतावनी: क्या आप सच में इस सदस्य को समाज से हटाना चाहते हैं?")) {
         await deleteDoc(doc(db, "users", uid));
@@ -245,7 +237,7 @@ window.deleteMember = async (uid) => {
     }
 };
 
-// --- 8. शेयर लिंक (Referral) ---
+// --- 8. शेयर लिंक ---
 window.shareAppLink = async () => {
     const user = auth.currentUser;
     const userDocRef = doc(db, "users", user.uid);
@@ -269,7 +261,7 @@ window.shareAppLink = async () => {
     }
 };
 
-// --- 9. अलर्ट और नोटिस सिस्टम (सुरक्षित रूप से अपडेट किया गया) ---
+// --- 9. अलर्ट और नोटिस सिस्टम ---
 document.getElementById('submit-alert-btn').addEventListener('click', async () => {
     const text = document.getElementById('alert-msg-input').value;
     const user = auth.currentUser;
@@ -279,7 +271,6 @@ document.getElementById('submit-alert-btn').addEventListener('click', async () =
     btn.innerText = "भेजा जा रहा है..."; btn.disabled = true;
 
     try {
-        // भेजने वाले का नाम सुरक्षित तरीके से निकालना
         const userDoc = await getDoc(doc(db, "users", user.uid));
         const senderName = userDoc.exists() ? userDoc.data().name : "एक सदस्य";
 
@@ -290,17 +281,16 @@ document.getElementById('submit-alert-btn').addEventListener('click', async () =
         });
         alert("आपका अलर्ट पूरे समाज को भेज दिया गया है!");
         document.getElementById('alert-msg-input').value = "";
-        document.getElementById('modal-overlay').click(); // मोडल बंद करें
+        document.getElementById('modal-overlay').click(); 
     } catch (e) {
         console.error(e); 
-        alert("त्रुटि: " + e.message); // इससे असली बीमारी का पता चलेगा
+        alert("त्रुटि: " + e.message); 
     } finally {
         btn.innerText = "🚨 अलर्ट ब्रॉडकास्ट करें"; btn.disabled = false;
     }
 });
 
 function listenForAlerts() {
-    // बैकग्राउंड में नए अलर्ट सुनना
     const qAlerts = query(collection(db, "alerts"), orderBy("timestamp", "desc"), limit(5));
     let initialLoad = true;
 
@@ -315,7 +305,6 @@ function listenForAlerts() {
                 const data = doc.data();
                 slider.innerHTML += `<div class="swiper-slide" style="background:#ffdddd; padding:15px; border-radius:10px; border:1px solid red; font-size:14px;"><b>🚨 ${data.senderName}</b>: ${data.msg}</div>`;
                 
-                // अगर कोई नया अलर्ट आता है (और यह पहला लोड नहीं है)
                 if(!initialLoad) {
                     if (Notification.permission === "granted") {
                         new Notification("🚩 इमरजेंसी अलर्ट!", { body: `${data.senderName}: ${data.msg}`, icon: "logo.png" });
@@ -354,19 +343,26 @@ window.updateNotice = async () => {
 
 document.getElementById('logout-btn-header').addEventListener('click', () => signOut(auth).then(() => location.reload()));
 
-// --- 10. भाषा बदलने का बटन (Hindi / English) ---
+// --- 10. भाषा बदलने का स्मार्ट बटन (Hindi / English) ---
 window.changeLanguage = function() {
-    const selectField = document.querySelector(".goog-te-combo");
+    const selectField = document.querySelector("select.goog-te-combo");
     if (selectField) {
-        // अगर अभी हिंदी है तो इंग्लिश करें, वरना हिंदी करें
-        selectField.value = selectField.value === 'en' ? 'hi' : 'en';
+        let targetLang = (selectField.value === 'en') ? 'hi' : 'en';
+        selectField.value = targetLang;
         selectField.dispatchEvent(new Event('change'));
         
-        // मेनू बंद करें (अगर मेनू से बटन दबाया गया है)
-        const menu = document.getElementById('side-menu');
-        if(menu && menu.classList.contains('active')) {
-            menu.classList.remove('active');
+        const btn = document.getElementById('lang-toggle-btn');
+        if(btn) {
+            btn.innerText = (targetLang === 'en') ? 'हिंदी' : 'English';
         }
+        
+        const menuBtn = document.getElementById('menu-lang-toggle');
+        if(menuBtn) {
+            menuBtn.innerHTML = (targetLang === 'en') ? '<i class="fa-solid fa-language"></i> हिंदी' : '<i class="fa-solid fa-language"></i> English';
+        }
+
+        const menu = document.getElementById('side-menu');
+        if(menu && menu.classList.contains('active')) menu.classList.remove('active');
     } else {
         alert("अनुवाद सेवा लोड हो रही है, कृपया 2 सेकंड रुकें...");
     }

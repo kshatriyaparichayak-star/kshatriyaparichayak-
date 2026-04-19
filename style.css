@@ -11,7 +11,7 @@ body {
     background-color: var(--cream-bg);
     margin: 0;
     padding: 0;
-    color: #333;
+    color: #222;
     padding-bottom: 30px; 
 }
 
@@ -21,17 +21,18 @@ body {
     top: 0; left: 0; background: white; overflow-x: hidden;
     transition: 0.4s; box-shadow: 4px 0 15px rgba(0,0,0,0.3);
 }
-.side-nav.active { width: 260px; }
+.side-nav.active { width: 280px; }
 .menu-header {
     background: var(--royal-red); color: white; padding: 20px;
     display: flex; justify-content: space-between; align-items: center;
-    font-weight: 600; border-bottom: 3px solid var(--gold);
+    font-weight: 600; font-size: 18px; border-bottom: 3px solid var(--gold);
 }
 .menu-links a {
-    padding: 15px 25px; text-decoration: none; font-size: 15px;
-    color: #444; display: block; border-bottom: 1px solid #eee;
+    padding: 15px 25px; text-decoration: none; font-size: 15px; font-weight: 500;
+    color: #333; display: block; border-bottom: 1px solid #eee; transition: 0.3s;
 }
-.menu-links i { margin-right: 12px; color: var(--royal-red); }
+.menu-links a:hover { background: #f9f9f9; color: var(--royal-red); }
+.menu-links i { margin-right: 12px; color: var(--royal-red); width: 20px; text-align: center; }
 
 /* --- रॉयल हेडर --- */
 .main-header {
@@ -42,12 +43,22 @@ body {
     border-bottom: 3px solid var(--gold);
 }
 .header-left { display: flex; align-items: center; gap: 12px; }
-.header-logo { width: 38px; height: 38px; border-radius: 6px; border: 1px solid var(--gold); }
+.header-logo { width: 45px; height: 45px; border-radius: 8px; border: 1.5px solid var(--gold); object-fit: cover; background: white;}
 .app-name { font-size: 19px; font-weight: 600; letter-spacing: 0.5px; }
-.notif-box { position: relative; margin-right: 15px; font-size: 20px; }
+
+/* नया: हेडर भाषा बटन */
+.header-lang-btn {
+    background: rgba(255, 255, 255, 0.25); border: 1px solid white;
+    color: white; padding: 4px 8px; border-radius: 6px;
+    font-size: 13px; font-weight: bold; cursor: pointer;
+    margin-right: 15px; transition: 0.3s;
+}
+.header-lang-btn:hover { background: white; color: var(--royal-red); }
+
+.notif-box { position: relative; margin-right: 15px; font-size: 20px; cursor: pointer;}
 .notif-badge {
     position: absolute; top: -5px; right: -8px; background: var(--saffron);
-    color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%;
+    color: white; font-size: 11px; font-weight: bold; padding: 2px 5px; border-radius: 50%;
 }
 .header-logout-btn { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
 
@@ -65,43 +76,47 @@ body {
 .my-edit-icon {
     position: absolute; bottom: 0; right: 0; background: var(--saffron);
     color: white; border: none; border-radius: 50%; width: 28px; height: 28px;
-    cursor: pointer;
+    cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 .my-info-box h2 { margin: 0; font-size: 20px; color: var(--royal-red); }
+.my-info-box p { color: #333; font-weight: 500; margin: 5px 0; font-size: 14px;}
 .btn-invite {
     width: 100%; margin-top: 15px; background: #27ae60; color: white;
     border: none; padding: 12px; border-radius: 10px; font-weight: bold;
     display: flex; justify-content: center; gap: 10px; cursor: pointer;
+    font-size: 15px; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
 }
 
 /* --- स्लाइडर्स डिजाइन --- */
 .slider-box {
-    background: white; margin: 15px; padding: 12px; border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background: white; margin: 15px; padding: 15px; border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #eee;
 }
-.slider-header { font-weight: 600; color: var(--royal-red); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;}
-.empty-slide { background: #fffcf0; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #888; border-radius: 8px; border: 1px dashed #ddd;}
+.slider-header { font-weight: 600; color: var(--royal-red); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-size: 16px;}
+.empty-slide { background: #fffcf0; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #333; border-radius: 8px; border: 1px dashed #ccc;}
+.alert-disclaimer { color: #555; font-weight: 600; font-size: 12px; text-align: center; margin-top: 10px; }
 
 /* --- सर्च पट्टी --- */
 .search-strip {
     background: white; margin: 15px; padding: 12px 20px; border-radius: 30px;
-    display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--gold);
+    display: flex; align-items: center; gap: 10px; border: 2px solid var(--gold);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-.search-strip input { border: none; outline: none; width: 100%; background: transparent; }
+.search-strip input { border: none; outline: none; width: 100%; background: transparent; font-size: 15px; font-family: 'Poppins', sans-serif;}
 
-/* --- एडमिन कंट्रोल पैनल (विशेष डिजाइन) --- */
+/* --- एडमिन कंट्रोल पैनल --- */
 .admin-panel {
     background: #fff9f0; margin: 20px 15px; padding: 18px; border-radius: 15px;
     border: 2px dashed var(--saffron); box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
-.admin-panel h4 { color: var(--royal-red); margin-top: 0; display: flex; align-items: center; gap: 8px; }
+.admin-panel h4 { color: var(--royal-red); margin-top: 0; display: flex; align-items: center; gap: 8px; font-size: 16px;}
 .admin-textarea {
-    width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px;
-    box-sizing: border-box; font-family: inherit; margin-bottom: 12px; resize: none;
+    width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px;
+    box-sizing: border-box; font-family: inherit; margin-bottom: 12px; resize: none; font-size: 14px;
 }
 .admin-action-btn {
     width: 100%; background: var(--royal-red); color: white; border: none;
-    padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;
+    padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px;
 }
 
 /* --- अलर्ट भेजें पट्टी --- */
@@ -110,31 +125,84 @@ body {
     width: 100%; background: #e74c3c; color: white; border: none;
     padding: 15px; border-radius: 12px; font-weight: bold; font-size: 16px;
     display: flex; justify-content: center; gap: 10px; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
 }
 
-/* --- सदस्य कार्ड्स --- */
+/* --- सदस्य कार्ड्स (लिस्ट वाले) --- */
 .profile-card {
     background: white; margin: 10px 15px; padding: 12px; border-radius: 12px;
     display: flex; gap: 12px; align-items: center; border-left: 5px solid var(--gold);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); justify-content: space-between;
 }
+.profile-card-left { display: flex; gap: 12px; align-items: center; }
+.profile-card img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--saffron); object-fit: cover;}
+.profile-card h4 { margin: 0; font-size: 15px; color: #222; }
+.profile-card p { margin: 3px 0 0 0; font-size: 12px; color: #555; font-weight: 500;}
+.btn-view-details { background: var(--royal-red); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer;}
 
 .section-divider { text-align: center; margin: 25px 0; position: relative; }
-.section-divider span { background: var(--cream-bg); padding: 0 15px; color: var(--royal-red); font-weight: bold; position: relative; z-index: 1;}
-.section-divider::after { content: ""; position: absolute; left: 15%; right: 15%; top: 50%; height: 1px; background: #ddd; }
+.section-divider span { background: var(--cream-bg); padding: 0 15px; color: var(--royal-red); font-weight: bold; position: relative; z-index: 1; font-size: 16px;}
+.section-divider::after { content: ""; position: absolute; left: 10%; right: 10%; top: 50%; height: 1.5px; background: #ccc; }
 
-/* --- अन्य --- */
-.sahyog-card { background: #fff3e0; margin: 15px; padding: 15px; border-radius: 12px; border: 1px solid var(--saffron); }
-.app-footer { text-align: center; padding: 20px; color: #888; font-size: 12px; }
+/* --- सहयोग कार्ड व QR कोड --- */
+.sahyog-card { background: #fff3e0; margin: 25px 15px; padding: 20px; border-radius: 15px; border: 2px solid var(--saffron); text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+.sahyog-card h3 { margin-top: 0; color: var(--royal-red); font-size: 18px;}
+.sahyog-card p { color: #333; font-weight: 500; font-size: 14px; margin-bottom: 15px;}
+.qr-box { background: white; padding: 15px; border-radius: 10px; display: inline-block; border: 1px dashed var(--saffron);}
+.qr-image { width: 150px; height: 150px; object-fit: contain; }
+.qr-box p { margin: 10px 0 0 0; font-size: 13px; font-weight: bold; color: #27ae60;}
 
-/* फॉर्म डिजाइन */
-.profile-form-card { background: white; border-radius: 20px; overflow: hidden; }
-.form-title { background: var(--saffron); color: white; padding: 15px; text-align: center; margin: 0; }
+.app-footer { text-align: center; padding: 20px; color: #444; font-weight: 600; font-size: 13px; }
+
+/* --- फॉर्म डिजाइन --- */
+.profile-form-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1);}
+.form-title { background: var(--saffron); color: white; padding: 18px; text-align: center; margin: 0; font-size: 18px;}
 .form-body { padding: 20px; }
-.input-field { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-.btn-save { width: 100%; background: var(--saffron); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; }
-.btn-cancel { width: 100%; background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; }
+.input-label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; margin-top: 10px;}
+.input-field { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 10px; box-sizing: border-box; font-family: inherit; font-size: 14px;}
+.form-section-head { background: #f0f0f0; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; color: var(--royal-red); margin: 15px 0 10px 0; text-align: center;}
+.btn-save { width: 100%; background: var(--saffron); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 10px; cursor: pointer;}
+.btn-cancel { width: 100%; background: none; border: none; color: #444; margin-top: 15px; cursor: pointer; font-weight: bold; font-size: 15px;}
 
-/* लॉगिन कार्ड */
-.welcome-card { background: white; margin: 40px 20px; padding: 40px 20px; border-radius: 20px; text-align: center; }
-.btn-primary { background: var(--saffron); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+/* --- लॉगिन कार्ड --- */
+.welcome-card { background: white; margin: 40px 20px; padding: 40px 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid var(--royal-red);}
+.welcome-card h2 { color: var(--royal-red); }
+.btn-primary { background: var(--saffron); color: white; border: none; padding: 14px 35px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);}
+
+
+/* ================= MODALS (पॉप-अप विंडोज का डिजाइन) ================= */
+.custom-modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); z-index: 3000; backdrop-filter: blur(3px);
+}
+.custom-modal {
+    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: white; width: 90%; max-width: 400px; max-height: 85vh; border-radius: 15px;
+    z-index: 3001; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden;
+}
+.custom-modal h3 {
+    background: var(--royal-red); color: white; margin: 0; padding: 15px 20px;
+    font-size: 18px; display: flex; align-items: center; gap: 10px;
+}
+.modal-body-scroll { padding: 20px; overflow-y: auto; max-height: 60vh; font-size: 14px; color: #333; line-height: 1.6;}
+.modal-body-scroll p { margin-bottom: 12px; }
+.modal-body-scroll ul { padding-left: 20px; margin-bottom: 15px; }
+.close-modal-btn {
+    position: absolute; top: 12px; right: 15px; color: white; font-size: 24px;
+    font-weight: bold; cursor: pointer; line-height: 1; z-index: 2;
+}
+
+/* --- फुल प्रोफाइल डिटेल्स कार्ड (नया) --- */
+.profile-detail-modal .modal-cover-img { height: 100px; background: var(--gold); position: relative; }
+.profile-detail-modal .det-img {
+    width: 100px; height: 100px; border-radius: 50%; border: 4px solid white;
+    position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); background: white;
+}
+.det-body { padding: 60px 20px 20px 20px; text-align: center; }
+.det-name { font-size: 22px; color: var(--royal-red); margin: 0; font-weight: bold;}
+.det-prof { color: var(--saffron); font-weight: bold; font-size: 14px; margin: 5px 0 15px 0;}
+.det-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; margin-bottom: 20px;}
+.det-item { background: #f9f9f9; padding: 10px; border-radius: 8px; border: 1px solid #eee; font-size: 13px;}
+.det-item strong { color: var(--royal-red); display: block; margin-bottom: 3px;}
+.btn-msg { width: 100%; background: var(--saffron); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; gap: 8px; font-size: 15px;}

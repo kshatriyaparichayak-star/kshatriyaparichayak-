@@ -169,7 +169,6 @@ body {
 .welcome-card h2 { color: var(--royal-red); }
 .btn-primary { background: var(--saffron); color: white; border: none; padding: 14px 35px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);}
 
-
 /* ================= MODALS (पॉप-अप विंडोज का डिजाइन) ================= */
 .custom-modal-overlay {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -206,3 +205,7 @@ body {
 .det-item { background: #f9f9f9; padding: 10px; border-radius: 8px; border: 1px solid #eee; font-size: 13px;}
 .det-item strong { color: var(--royal-red); display: block; margin-bottom: 3px;}
 .btn-msg { width: 100%; background: var(--saffron); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; gap: 8px; font-size: 15px;}
+
+/* --- गूगल ट्रांसलेट की सफेद पट्टी को छिपाने के लिए --- */
+body { top: 0 !important; }
+.skiptranslate { display: none !important; }

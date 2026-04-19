@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>क्षत्रिय परिचायक - प्रोफेशनल</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="style.css">
@@ -18,9 +18,14 @@
             <i class="fa-solid fa-xmark" onclick="toggleMenu()" style="cursor:pointer;"></i>
         </div>
         <div class="menu-links">
-            <a href="#"><i class="fa-solid fa-circle-info"></i> About Us</a>
-            <a href="#"><i class="fa-solid fa-file-contract"></i> Terms & Conditions</a>
-            <a href="#"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+            <a href="#" onclick="openModal('about-modal'); toggleMenu();"><i class="fa-solid fa-circle-info"></i> About Us</a>
+            <a href="#" onclick="openModal('terms-modal'); toggleMenu();"><i class="fa-solid fa-file-contract"></i> Terms & Conditions</a>
+            <a href="#" onclick="openModal('privacy-modal'); toggleMenu();"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+            <a href="#" onclick="openModal('faq-modal'); toggleMenu();"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+            <a href="#" onclick="openModal('contact-modal'); toggleMenu();"><i class="fa-solid fa-phone"></i> Contact Us</a>
+            
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
+            <a href="#" id="menu-lang-toggle"><i class="fa-solid fa-language"></i> भाषा / Language</a>
         </div>
     </div>
 
@@ -30,10 +35,11 @@
             <img src="logo.png" alt="logo" class="header-logo">
             <span class="app-name">क्षत्रिय परिचायक</span>
         </div>
-        <div class="header-right">
-            <div class="notif-box">
+        <div class="header-right" style="display: flex; align-items: center;">
+            <button id="lang-toggle-btn" class="header-lang-btn">अ / A</button>
+            <div class="notif-box" onclick="openModal('notif-modal')">
                 <i class="fa-solid fa-bell"></i>
-                <span class="notif-badge">0</span>
+                <span class="notif-badge" id="notif-count">0</span>
             </div>
             <button id="logout-btn-header" class="header-logout-btn">
                 <i class="fa-solid fa-right-from-bracket"></i>
@@ -47,6 +53,7 @@
             <h2>जय श्री राम!</h2>
             <p>समाज से जुड़ने के लिए लॉगिन करें</p>
             <button id="login-btn" class="btn-primary">Google लॉगिन</button>
+            <p id="invite-error-msg" style="color: red; font-size: 13px; margin-top: 10px; display: none;">क्षमा करें! आप बिना आमंत्रण लिंक के नहीं जुड़ सकते।</p>
         </div>
 
         <div id="profile-container" style="display: none; padding: 15px;">
@@ -67,8 +74,10 @@
                     
                     <select id="user-blood" class="input-field">
                         <option value="">ब्लड ग्रुप चुनें</option>
-                        <option value="A+">A+</option><option value="B+">B+</option>
-                        <option value="O+">O+</option><option value="AB+">AB+</option>
+                        <option value="A+">A+</option><option value="A-">A-</option>
+                        <option value="B+">B+</option><option value="B-">B-</option>
+                        <option value="O+">O+</option><option value="O-">O-</option>
+                        <option value="AB+">AB+</option><option value="AB-">AB-</option>
                     </select>
 
                     <input type="text" id="user-profession" class="input-field" placeholder="व्यवसाय (Profession)">
@@ -130,23 +139,24 @@
             </div>
 
             <div class="section-divider">
-                <span><i class="fa-solid fa-users"></i> नए सदस्य</span>
+                <span><i class="fa-solid fa-users"></i> समाज के सदस्य</span>
             </div>
-            <div id="latest-members-list"></div>
-
+            
             <div class="search-strip">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="और सदस्य खोजें (नाम, गाँव या जिला)...">
+                <input type="text" id="searchInput" placeholder="सदस्य खोजें (नाम, गाँव या जिला)...">
             </div>
+
+            <div id="latest-members-list"></div>
 
             <div id="admin-tools" class="admin-panel" style="display: none;">
                 <h4><i class="fa-solid fa-shield-halved"></i> एडमिन कंट्रोल</h4>
-                <textarea id="notice-input" class="admin-textarea" placeholder="नई सूचना या अलर्ट यहाँ लिखें..."></textarea>
+                <textarea id="notice-input" class="admin-textarea" placeholder="नई सूचना यहाँ लिखें..."></textarea>
                 <button onclick="updateNotice()" class="admin-action-btn">Update Notice Board</button>
             </div>
 
             <div class="alert-action-strip">
-                <button id="send-alert-btn" class="btn-send-alert">
+                <button id="send-alert-btn" class="btn-send-alert" onclick="openModal('create-alert-modal')">
                     <i class="fa-solid fa-circle-exclamation"></i> समाज को अलर्ट भेजें
                 </button>
             </div>
@@ -154,11 +164,98 @@
             <div class="sahyog-card">
                 <h3><i class="fa-solid fa-hand-holding-heart"></i> सहयोग क्यों करें?</h3>
                 <p>समाज को डिजिटल रूप से एक मंच पर लाने और ऐप के खर्चों के लिए आपका सहयोग अनिवार्य है।</p>
+                <div class="qr-box">
+                    <img src="qr.png" alt="QR Code" class="qr-image">
+                    <p>स्कैन करके स्वेच्छा से सहयोग करें 🙏</p>
+                </div>
             </div>
 
             <footer class="app-footer">
                 Copyright ©️ Kshatriyaparichayak 2026
             </footer>
+        </div>
+    </div>
+
+    <div id="modal-overlay" class="custom-modal-overlay" onclick="closeAllModals()"></div>
+
+    <div id="about-modal" class="custom-modal">
+        <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
+        <h3><i class="fa-solid fa-circle-info"></i> About Us</h3>
+        <div class="modal-body-scroll">
+            <p>यह वेबसाइट क्षत्रिय समाज के सभी सदस्यों को एक मंच पर जोड़ने का एक प्रयास है। हमारा उद्देश्य है कि समाज के लोग, चाहे वे देश के किसी भी कोने में रहते हों, आपस में जुड़े रहें और अपनी पहचान, परंपराओं एवं मूल्यों को आगे बढ़ाते रहें।</p>
+            <p>क्षत्रिय समाज सदियों से वीरता, सम्मान, त्याग और धर्म के मार्ग पर चलने के लिए जाना जाता है। उसी गौरवशाली विरासत को आगे बढ़ाने के लिए यह प्लेटफॉर्म तैयार किया गया है।</p>
+            <ul>
+                <li>समाज के सदस्यों की एक डायरेक्टरी (परिचय सूची) तैयार कर रहे हैं।</li>
+                <li>लोगों को आपस में जोड़ने का कार्य कर रहे हैं।</li>
+                <li>समाज से जुड़ी महत्वपूर्ण जानकारी और अपडेट साझा कर रहे हैं।</li>
+            </ul>
+            <p><b>आपका सहयोग ही हमारी सबसे बड़ी ताकत है। धन्यवाद 🙏</b></p>
+        </div>
+    </div>
+
+    <div id="terms-modal" class="custom-modal">
+        <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
+        <h3><i class="fa-solid fa-file-contract"></i> Terms & Conditions</h3>
+        <div class="modal-body-scroll">
+            <p><b>1. वेबसाइट का उद्देश्य:</b> यह प्लेटफॉर्म क्षत्रिय समाज के सदस्यों को जोड़ने के लिए बनाया गया है। इसका उपयोग केवल सकारात्मक उद्देश्यों के लिए किया जाए।</p>
+            <p><b>2. प्रोफाइल जानकारी:</b> आप जो भी जानकारी डालते हैं, वह सत्य होनी चाहिए। फर्जी जानकारी डालना मना है।</p>
+            <p><b>3. कंटेंट नियम:</b> अपमानजनक या गैर-कानूनी कंटेंट पोस्ट करना मना है। एडमिन को इसे हटाने का अधिकार है。</p>
+            <p><b>4. एडमिन अधिकार:</b> एडमिन किसी भी प्रोफाइल को बिना पूर्व सूचना के approve, reject या delete कर सकता है।</p>
+            <p><b>5. जिम्मेदारी:</b> वेबसाइट पर दी गई जानकारी का उपयोग आप अपनी जिम्मेदारी पर करते हैं।</p>
+            <p>इस वेबसाइट का उपयोग करके आप इन शर्तों से सहमत होते हैं। 🙏</p>
+        </div>
+    </div>
+
+    <div id="privacy-modal" class="custom-modal">
+        <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
+        <h3><i class="fa-solid fa-shield-halved"></i> Privacy Policy</h3>
+        <div class="modal-body-scroll">
+            <p>आपकी गोपनीयता हमारे लिए महत्वपूर्ण है।</p>
+            <p><b>1. हम कौन-सी जानकारी लेते हैं:</b> नाम, मोबाइल नंबर, पता, गोत्र आदि।</p>
+            <p><b>2. उपयोग:</b> समाज की डायरेक्टरी तैयार करने और सदस्यों को जोड़ने के लिए।</p>
+            <p><b>3. सुरक्षा:</b> आपकी जानकारी बिना अनुमति किसी बाहरी व्यक्ति या संस्था को नहीं दी जाएगी। आपका मोबाइल नंबर सार्वजनिक नहीं होगा।</p>
+            <p><b>4. आपकी जिम्मेदारी:</b> आप जो जानकारी साझा करते हैं, उसकी जिम्मेदारी आपकी है। संवेदनशील जानकारी (जैसे बैंक डिटेल) शेयर न करें।</p>
+            <p>इस वेबसाइट का उपयोग करके आप इस Privacy Policy से सहमत होते हैं। 🙏</p>
+        </div>
+    </div>
+
+    <div id="faq-modal" class="custom-modal">
+        <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
+        <h3><i class="fa-solid fa-circle-question"></i> FAQ</h3>
+        <div class="modal-body-scroll">
+            <p><b>1. यह वेबसाइट किसके लिए है?</b><br>यह क्षत्रिय समाज के सभी सदस्यों के लिए है।</p>
+            <p><b>2. क्या रजिस्ट्रेशन जरूरी है?</b><br>हाँ, डायरेक्टरी में शामिल होने के लिए जरूरी है।</p>
+            <p><b>3. क्या मेरी जानकारी सुरक्षित रहेगी?</b><br>जी हाँ, हम पूरी कोशिश करते हैं। आपका नंबर अन्य सदस्यों को नहीं दिखता।</p>
+            <p><b>4. क्या मैं प्रोफाइल बाद में अपडेट कर सकता हूँ?</b><br>हाँ, आप कभी भी एडिट कर सकते हैं।</p>
+            <p><b>5. मासिक सहयोग क्यों जरूरी है?</b><br>वेबसाइट को चलाने और सुरक्षित रखने के लिए खर्च आता है।</p>
+            <p><b>6. क्या मैं किसी और की जानकारी जोड़ सकता हूँ?</b><br>नहीं, कृपया केवल अपनी सही जानकारी दें।</p>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="custom-modal">
+        <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
+        <h3><i class="fa-solid fa-phone"></i> Contact Us</h3>
+        <div class="modal-body-scroll" style="text-align: center;">
+            <p>अगर आपको कोई सवाल या सुझाव है, तो हमसे बेझिझक संपर्क करें।</p>
+            <h3 style="color: var(--royal-red); margin: 15px 0;">📞 +91 9793259359</h3>
+            <p><b>📧 kshatriyaparichayak@gmail.com</b></p>
+            <p style="margin-top: 15px;">आपके सुझाव हमारे लिए महत्वपूर्ण हैं।<br>धन्यवाद 🙏</p>
+        </div>
+    </div>
+
+    <div id="member-detail-modal" class="custom-modal profile-detail-modal">
+        <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
+        <div id="member-detail-content">
+            </div>
+    </div>
+
+    <div id="create-alert-modal" class="custom-modal">
+        <span class="close-modal-btn" onclick="closeAllModals()">&times;</span>
+        <h3><i class="fa-solid fa-triangle-exclamation"></i> नया अलर्ट भेजें</h3>
+        <div class="modal-body-scroll">
+            <textarea id="alert-msg-input" class="input-field" rows="4" placeholder="अपनी आपातकालीन स्थिति या संदेश यहाँ लिखें..."></textarea>
+            <button id="submit-alert-btn" class="btn-primary" style="background: var(--royal-red);">🚨 अलर्ट ब्रॉडकास्ट करें</button>
+            <p style="font-size: 11px; color: gray; margin-top: 10px;">नोट: यह संदेश ऐप के सभी सदस्यों के फोन पर नोटिफिकेशन के रूप में जाएगा। इसका गलत इस्तेमाल करने पर आईडी ब्लॉक की जा सकती है।</p>
         </div>
     </div>
 
@@ -168,6 +265,15 @@
         function toggleMenu() {
             const menu = document.getElementById('side-menu');
             menu.classList.toggle('active');
+        }
+        function openModal(modalId) {
+            document.getElementById('modal-overlay').style.display = 'block';
+            document.getElementById(modalId).style.display = 'block';
+        }
+        function closeAllModals() {
+            document.getElementById('modal-overlay').style.display = 'none';
+            const modals = document.querySelectorAll('.custom-modal');
+            modals.forEach(m => m.style.display = 'none');
         }
     </script>
 </body>

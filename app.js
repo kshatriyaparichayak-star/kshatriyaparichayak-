@@ -1,9 +1,10 @@
 import { auth, db, provider } from './firebase-config.js';
 import { signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { doc, setDoc, getDoc, collection, getDocs, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, setDoc, getDoc, collection, getDocs, deleteDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const adminEmail = "kshatriyaparichayak@gmail.com"; 
 
+// --- Cloudinary फोटो अपलोड ---
 async function uploadToFreeCloud(file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -13,7 +14,6 @@ async function uploadToFreeCloud(file) {
             method: 'POST',
             body: formData
         });
-        if (!response.ok) throw new Error("Upload Failed");
         const result = await response.json();
         return result.secure_url;
     } catch (err) {
@@ -28,7 +28,7 @@ function calculateAge(birthDate) {
     return Math.abs(new Date(diff).getUTCFullYear() - 1970);
 }
 
-// लॉगिन चेक
+// --- लॉगिन लॉजिक ---
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -41,13 +41,12 @@ onAuthStateChanged(auth, async (user) => {
     } else {
         document.getElementById('login-card').style.display = 'block';
         document.getElementById('dashboard-container').style.display = 'none';
-        document.getElementById('profile-container').style.display = 'none';
     }
 });
 
 document.getElementById('login-btn').addEventListener('click', () => signInWithPopup(auth, provider));
 
-// डेटा सुरक्षित करना (पूरे फॉर्म के साथ)
+// --- डेटा सेव करना ---
 document.getElementById('save-profile-btn').addEventListener('click', async () => {
     const user = auth.currentUser;
     const saveBtn = document.getElementById('save-profile-btn');
@@ -61,8 +60,6 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
         if (photoInput.files[0]) {
             photoURL = await uploadToFreeCloud(photoInput.files[0]);
         }
-        
-        // आपकी HTML के अनुसार सारा डेटा इकट्ठा करना
         const data = {
             photo: photoURL,
             name: document.getElementById('user-name').value,
@@ -82,117 +79,120 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
                 dist: document.getElementById('cur-dist').value,
                 state: document.getElementById('cur-state').value
             },
-            uid: user.uid
+            uid: user.uid,
+            timestamp: Date.now(),
+            inviteCount: 11 // डिफ़ॉल्ट लिंक लिमिट
         };
-        
         await setDoc(doc(db, "users", user.uid), data);
         alert("प्रोफाइल सुरक्षित हुई!");
         showDashboard();
     } catch (e) {
         alert("त्रुटि: " + e.message);
     } finally {
-        saveBtn.innerText = "प्रोफाइल सुरक्षित करें";
+        saveBtn.innerText = "सुरक्षित करें";
         saveBtn.disabled = false;
     }
 });
 
-// डैशबोर्ड लोड करना
+// --- डैशबोर्ड और फीचर्स ---
 async function showDashboard() {
     document.getElementById('login-card').style.display = 'none';
     document.getElementById('profile-container').style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'block';
-    document.getElementById('logout-btn-header').style.display = 'block';
 
     const user = auth.currentUser;
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    const myData = userDoc.data();
+
+    // 1. अपनी प्रोफाइल अपडेट करें
+    document.getElementById('display-my-name').innerText = myData.name;
+    document.getElementById('display-my-father').innerText = myData.father;
+    document.getElementById('display-my-age').innerText = calculateAge(myData.dob);
+    document.getElementById('display-my-city').innerText = myData.cur_address.dist;
+    document.getElementById('my-profile-pic').src = myData.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+    document.getElementById('link-count').innerText = (user.email === adminEmail) ? "अनलिमिटेड" : (myData.inviteCount || 0);
+
+    // 2. एडमिन चेक
     if (user.email === adminEmail) {
         document.getElementById('admin-tools').style.display = 'block';
     }
 
-    // नोटिस लोड
-    onSnapshot(doc(db, "settings", "notice"), (doc) => {
-        if (doc.exists()) {
-            document.getElementById('notice-display').innerHTML = `<marquee>${doc.data().text}</marquee>`;
-        }
+    // 3. लेटेस्ट 5 सदस्य लोड करें
+    const q = query(collection(db, "users"), orderBy("timestamp", "desc"), limit(5));
+    onSnapshot(q, (snapshot) => {
+        const list = document.getElementById('latest-members-list');
+        list.innerHTML = "";
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
+            const card = document.createElement('div');
+            card.className = "profile-card";
+            card.innerHTML = `
+                <img src="${d.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" style="width:55px; height:55px; border-radius:50%; object-fit:cover;">
+                <div style="flex:1;">
+                    <h4 style="margin:0;">${d.name}</h4>
+                    <p style="margin:2px 0; font-size:11px;">🎂 ${calculateAge(d.dob)} वर्ष | ${d.profession || 'समाज सेवी'}</p>
+                    <p style="margin:2px 0; font-size:11px; color:#ff8c00;">📍 ${d.cur_address.dist}</p>
+                    <div style="margin-top:5px;">
+                        <button class="msg-btn" onclick="window.open('https://wa.me/91${d.phone}')" style="background:#25D366; color:white; border:none; padding:3px 8px; border-radius:5px; font-size:10px;">Message</button>
+                        <button class="view-btn" style="background:#3498db; color:white; border:none; padding:3px 8px; border-radius:5px; font-size:10px; margin-left:5px;">विवरण</button>
+                    </div>
+                </div>`;
+            list.appendChild(card);
+        });
     });
 
-    const snapshot = await getDocs(collection(db, "users"));
-    const list = document.getElementById('users-list');
-    list.innerHTML = "";
-    
-    snapshot.forEach(docSnap => {
-        const d = docSnap.data();
-        const card = document.createElement('div');
-        card.className = "profile-card";
-        card.style = "margin-bottom:15px; padding:15px; background:white; border-radius:12px; display:flex; gap:15px; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); border-left: 5px solid #ff8c00;";
-        
-        card.innerHTML = `
-            <img src="${d.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid #ff8c00;">
-            <div style="flex:1;">
-                <h3 style="margin:0; font-size:16px;">${d.name}</h3>
-                <p style="margin:2px 0; font-size:12px;">🚩 ${d.gotra} | 🩸 ${d.blood || '---'} | 🎂 ${calculateAge(d.dob)} वर्ष</p>
-                <p style="margin:2px 0; font-size:12px; color:#e67e22;">📍 ${d.cur_address?.dist || '---'}</p>
-                <div style="margin-top:5px;">
-                    <a href="https://wa.me/91${d.phone}" target="_blank" style="text-decoration:none; background:#25D366; color:white; padding:4px 10px; border-radius:10px; font-size:11px;">WhatsApp</a>
-                    ${user.email === adminEmail ? `<button class="del-btn" data-id="${docSnap.id}" style="background:#e74c3c; color:white; border:none; padding:4px 10px; border-radius:10px; font-size:11px; margin-left:5px;">Delete</button>` : ''}
-                </div>
-            </div>`;
-        list.appendChild(card);
-    });
-
-    document.querySelectorAll('.del-btn').forEach(btn => {
-        btn.onclick = async (e) => {
-            if(confirm("हटाएं?")) {
-                await deleteDoc(doc(db, "users", e.target.dataset.id));
-                showDashboard();
-            }
-        };
-    });
+    // 4. स्लाइडर्स लोड करना (इमरजेंसी और सूचना)
+    loadSliders();
 }
 
-// --- EDIT BUTTON FIXED ---
+// --- स्लाइडर्स का डेटा ---
+function loadSliders() {
+    // यहाँ हम Firebase से डेटा लाएंगे (उदाहरण के लिए 9 स्लाइड्स)
+    // अभी के लिए इसे स्वाइपर इनिशियलाइज़ करने के लिए इस्तेमाल कर रहे हैं
+    new Swiper('.swiper-emergency', { pagination: { el: '.swiper-pagination' }, loop: true });
+    new Swiper('.swiper-notice', { pagination: { el: '.swiper-pagination' }, loop: true });
+}
+
+// --- सदस्य जोड़ने का लिंक ---
+window.shareAppLink = async () => {
+    const user = auth.currentUser;
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    const data = userDoc.data();
+
+    if (user.email !== adminEmail && data.inviteCount <= 0) {
+        alert("आपके लिंक की सीमा समाप्त हो गई है!");
+        return;
+    }
+
+    const shareText = `🚩 क्षत्रिय परिचायक ऐप 🚩\nसमाज से जुड़ने के लिए नीचे दिए गए लिंक से रजिस्टर करें:\nhttps://kshatriyaparichayak-star.github.io/kshatriyaparichayak-/`;
+    
+    if (navigator.share) {
+        navigator.share({ title: 'क्षत्रिय परिचायक', text: shareText });
+        if (user.email !== adminEmail) {
+            await setDoc(doc(db, "users", user.uid), { inviteCount: data.inviteCount - 1 }, { merge: true });
+        }
+    } else {
+        alert("लिंक कॉपी करें: " + shareText);
+    }
+};
+
+// --- एडिट बटन ---
 document.getElementById('edit-profile-btn').addEventListener('click', async () => {
     const user = auth.currentUser;
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
         const d = userDoc.data();
-        
-        // फॉर्म में डेटा भरना (सारी ID मैच कर दी गई हैं)
         document.getElementById('user-name').value = d.name || '';
         document.getElementById('user-father').value = d.father || '';
         document.getElementById('user-dob').value = d.dob || '';
         document.getElementById('user-gotra').value = d.gotra || '';
         document.getElementById('user-phone').value = d.phone || '';
-        document.getElementById('user-blood').value = d.blood || '';
-        document.getElementById('user-profession').value = d.profession || '';
         document.getElementById('user-photo-url').value = d.photo || '';
         
-        document.getElementById('mul-gram').value = d.mul_address?.gram || '';
-        document.getElementById('mul-dist').value = d.mul_address?.dist || '';
-        document.getElementById('mul-state').value = d.mul_address?.state || '';
-        
-        document.getElementById('cur-gram').value = d.cur_address?.gram || '';
-        document.getElementById('cur-dist').value = d.cur_address?.dist || '';
-        document.getElementById('cur-state').value = d.cur_address?.state || '';
-
-        // पेज बदलना
         document.getElementById('dashboard-container').style.display = 'none';
         document.getElementById('profile-container').style.display = 'block';
-        document.getElementById('cancel-edit-btn').style.display = 'block';
     }
 });
-
-document.getElementById('cancel-edit-btn').addEventListener('click', () => {
-    showDashboard();
-});
-
-window.updateNotice = async () => {
-    const text = document.getElementById('notice-input').value;
-    if(text) {
-        await setDoc(doc(db, "settings", "notice"), { text: text });
-        alert("सूचना अपडेट!");
-        document.getElementById('notice-input').value = "";
-    }
-};
 
 document.getElementById('logout-btn-header').addEventListener('click', () => {
     signOut(auth).then(() => location.reload());

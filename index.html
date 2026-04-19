@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <header class="main-header">
+    <header class="main-header" id="app-header" style="display: none;">
         <div class="header-left">
             <i class="fa-solid fa-bars" onclick="toggleMenu()" style="cursor:pointer; font-size: 20px;"></i>
             <img src="logo.png" alt="logo" class="header-logo">
@@ -108,12 +108,6 @@
                 </button>
             </div>
 
-            <div id="admin-tools" class="admin-panel">
-                <h4><i class="fa-solid fa-shield-halved"></i> एडमिन कंट्रोल</h4>
-                <textarea id="notice-input" class="admin-textarea" placeholder="नई सूचना या अलर्ट यहाँ लिखें..."></textarea>
-                <button onclick="updateNotice()" class="admin-action-btn">Update Notice</button>
-            </div>
-
             <div class="slider-box">
                 <div class="slider-header"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</div>
                 <div class="swiper swiper-emergency">
@@ -138,12 +132,17 @@
             <div class="section-divider">
                 <span><i class="fa-solid fa-users"></i> नए सदस्य</span>
             </div>
-            <div id="latest-members-list">
-                </div>
+            <div id="latest-members-list"></div>
 
             <div class="search-strip">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchInput" placeholder="और सदस्य खोजें (नाम, गाँव या जिला)...">
+            </div>
+
+            <div id="admin-tools" class="admin-panel" style="display: none;">
+                <h4><i class="fa-solid fa-shield-halved"></i> एडमिन कंट्रोल</h4>
+                <textarea id="notice-input" class="admin-textarea" placeholder="नई सूचना या अलर्ट यहाँ लिखें..."></textarea>
+                <button onclick="updateNotice()" class="admin-action-btn">Update Notice Board</button>
             </div>
 
             <div class="alert-action-strip">
@@ -166,7 +165,6 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script type="module" src="app.js"></script>
     <script>
-        // साइड मेनू फंक्शन
         function toggleMenu() {
             const menu = document.getElementById('side-menu');
             menu.classList.toggle('active');

@@ -269,27 +269,31 @@ window.shareAppLink = async () => {
     }
 };
 
-// --- 9. अलर्ट और नोटिस सिस्टम ---
+// --- 9. अलर्ट और नोटिस सिस्टम (सुरक्षित रूप से अपडेट किया गया) ---
 document.getElementById('submit-alert-btn').addEventListener('click', async () => {
     const text = document.getElementById('alert-msg-input').value;
     const user = auth.currentUser;
-    const d = allUsersData[user.uid];
     if(!text) return;
 
     const btn = document.getElementById('submit-alert-btn');
     btn.innerText = "भेजा जा रहा है..."; btn.disabled = true;
 
     try {
+        // भेजने वाले का नाम सुरक्षित तरीके से निकालना
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const senderName = userDoc.exists() ? userDoc.data().name : "एक सदस्य";
+
         await addDoc(collection(db, "alerts"), {
             msg: text,
-            senderName: d.name,
+            senderName: senderName,
             timestamp: serverTimestamp()
         });
         alert("आपका अलर्ट पूरे समाज को भेज दिया गया है!");
         document.getElementById('alert-msg-input').value = "";
         document.getElementById('modal-overlay').click(); // मोडल बंद करें
     } catch (e) {
-        console.error(e); alert("त्रुटि!");
+        console.error(e); 
+        alert("त्रुटि: " + e.message); // इससे असली बीमारी का पता चलेगा
     } finally {
         btn.innerText = "🚨 अलर्ट ब्रॉडकास्ट करें"; btn.disabled = false;
     }
@@ -349,3 +353,21 @@ window.updateNotice = async () => {
 };
 
 document.getElementById('logout-btn-header').addEventListener('click', () => signOut(auth).then(() => location.reload()));
+
+// --- 10. भाषा बदलने का बटन (Hindi / English) ---
+window.changeLanguage = function() {
+    const selectField = document.querySelector(".goog-te-combo");
+    if (selectField) {
+        // अगर अभी हिंदी है तो इंग्लिश करें, वरना हिंदी करें
+        selectField.value = selectField.value === 'en' ? 'hi' : 'en';
+        selectField.dispatchEvent(new Event('change'));
+        
+        // मेनू बंद करें (अगर मेनू से बटन दबाया गया है)
+        const menu = document.getElementById('side-menu');
+        if(menu && menu.classList.contains('active')) {
+            menu.classList.remove('active');
+        }
+    } else {
+        alert("अनुवाद सेवा लोड हो रही है, कृपया 2 सेकंड रुकें...");
+    }
+};

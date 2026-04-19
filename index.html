@@ -3,110 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>राजपूत - क्षत्रिय परिचायक</title>
+    <title>क्षत्रिय परिचायक - प्रोफेशनल</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <style>
-        .search-box { width: 100%; padding: 12px; margin: 10px 0; border-radius: 25px; border: 1px solid #ff8c00; outline: none; box-sizing: border-box; }
-        .logout-link { color: #fff; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 15px; text-decoration: none; font-size: 14px; cursor: pointer; border: none; }
-        .edit-btn { background: #3498db; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
-        .form-section { border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px; font-weight: bold; color: #ff8c00; }
-        .input-field { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; transition: all 0.3s; }
-        
-        /* लॉक किए गए फील्ड का स्टाइल */
-        .input-field:read-only, .input-field:disabled { background: #f0f0f0 !important; color: #888; border: 1px solid #ccc; cursor: not-allowed; }
-        input[type="file"] { padding: 8px; background: #fff3e0; border: 1px dashed #ff8c00; }
-
-        /* नोटिस बोर्ड स्टाइल */
-        #notice-bar { background: linear-gradient(90deg, #ff8c00, #e67e22); padding: 12px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
-        
-        /* एडमिन पैनल स्टाइल */
-        #admin-tools { display: none; background: #fff; padding: 15px; border: 2px solid #ff8c00; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .admin-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; font-family: inherit; }
-        .admin-btn { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-    </style>
 </head>
 <body>
 
-    <header style="display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative;">
-        <button id="logout-btn-header" class="logout-link" style="position: absolute; right: 10px; top: 10px; display: none;">निकास</button>
-        <img src="logo.png" alt="logo" style="width: 70px; height: auto; margin-bottom: 5px;">
-        <h1 style="margin: 0; font-size: 22px;">क्षत्रिय परिचायक</h1>
-    </header>
-
-    <div id="app">
-        <div id="login-card" class="welcome-card" style="text-align: center; margin: 20px; padding: 20px; border-radius: 15px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <h2>स्वागत है!</h2>
-            <p>समाज से जुड़ने के लिए लॉगिन करें</p>
-            <button id="login-btn" class="btn-primary" style="margin-top:15px;">Google लॉगिन</button>
+    <div id="side-menu" class="side-nav">
+        <div class="menu-header">
+            <span>मेनू</span>
+            <i class="fa-solid fa-xmark" onclick="toggleMenu()" style="cursor:pointer;"></i>
         </div>
-
-        <div id="profile-container" style="display: none; padding: 15px;">
-            <div class="profile-card" style="background: white; padding: 20px; border-radius: 15px; border-top: 5px solid #ff8c00;">
-                <h3 style="color: #ff8c00; text-align: center;">सदस्यता फॉर्म</h3>
-                
-                <p style="font-size: 13px; color: #333; margin-bottom: 5px; font-weight: 600;">अपनी प्रोफाइल फोटो चुनें</p>
-                <input type="file" id="user-photo-file" class="input-field" accept="image/*">
-                <input type="hidden" id="user-photo-url">
-                
-                <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम *">
-                <input type="text" id="user-father" class="input-field" placeholder="पिता का नाम">
-                <p style="font-size: 12px; color: grey; margin-top: 5px;">जन्म तिथि (उम्र के लिए)</p>
-                <input type="date" id="user-dob" class="input-field">
-                
-                <input type="text" id="user-gotra" class="input-field" placeholder="गोत्र *">
-                <input type="tel" id="user-phone" class="input-field" placeholder="मोबाइल नंबर *">
-                
-                <select id="user-blood" class="input-field">
-                    <option value="">ब्लड ग्रुप चुनें</option>
-                    <option value="A+">A+</option><option value="A-">A-</option>
-                    <option value="B+">B+</option><option value="B-">B-</option>
-                    <option value="O+">O+</option><option value="O-">O-</option>
-                    <option value="AB+">AB+</option><option value="AB-">AB-</option>
-                </select>
-
-                <input type="text" id="user-profession" class="input-field" placeholder="व्यवसाय (Profession)">
-
-                <div class="form-section">मूल निवास (परिवर्तित नहीं होगा)</div>
-                <input type="text" id="mul-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
-                <input type="text" id="mul-dist" class="input-field" placeholder="जिला">
-                <input type="text" id="mul-state" class="input-field" placeholder="राज्य">
-
-                <div class="form-section">वर्तमान निवास (बदल सकते हैं)</div>
-                <input type="text" id="cur-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
-                <input type="text" id="cur-dist" class="input-field" placeholder="जिला *">
-                <input type="text" id="cur-state" class="input-field" placeholder="राज्य">
-
-                <button id="save-profile-btn" class="btn-primary" style="width: 100%; padding: 12px; background: #ff8c00; border: none; color: white; border-radius: 8px; font-weight: bold; cursor: pointer;">प्रोफाइल सुरक्षित करें</button>
-                <button id="cancel-edit-btn" style="display:none; width:100%; margin-top:15px; background:none; border:none; color:grey; font-size:14px; cursor:pointer;">वापस जाएँ (Cancel)</button>
-            </div>
-        </div>
-
-        <div id="dashboard-container" style="display: none; padding: 10px;">
-            
-            <div id="notice-bar">
-                <div id="notice-display" style="color: white; font-weight: bold; font-size: 14px; text-align: center;">
-                    सूचना लोड हो रही है...
-                </div>
-            </div>
-
-            <div id="admin-tools">
-                <h4 style="margin:0 0 10px 0; color:#ff8c00; display: flex; align-items: center;">🚩 एडमिन कंट्रोल पैनल</h4>
-                <textarea id="notice-input" class="admin-input" rows="2" placeholder="समाज के लिए नई सूचना यहाँ लिखें..."></textarea>
-                <button onclick="updateNotice()" class="admin-btn">Update Notice Board</button>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                <h2 style="color: #ff8c00; margin: 0; font-size: 18px;">समाज के सदस्य</h2>
-                <button id="edit-profile-btn" class="edit-btn">✏️ प्रोफाइल बदलें</button>
-            </div>
-            <input type="text" id="searchInput" class="search-box" placeholder="नाम, गाँव या जिला से खोजें...">
-            
-            <div id="users-list"></div>
+        <div class="menu-links">
+            <a href="#"><i class="fa-solid fa-circle-info"></i> About Us</a>
+            <a href="#"><i class="fa-solid fa-file-contract"></i> Terms & Conditions</a>
+            <a href="#"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
         </div>
     </div>
 
+    <header class="main-header">
+        <div class="header-left">
+            <i class="fa-solid fa-bars" onclick="toggleMenu()" style="cursor:pointer; font-size: 20px;"></i>
+            <img src="logo.png" alt="logo" class="header-logo">
+            <span class="app-name">क्षत्रिय परिचायक</span>
+        </div>
+        <div class="header-right">
+            <div class="notif-box">
+                <i class="fa-solid fa-bell"></i>
+                <span class="notif-badge">0</span>
+            </div>
+            <button id="logout-btn-header" class="header-logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </header>
+
+    <div id="app">
+        <div id="login-card" class="welcome-card">
+            <img src="logo.png" style="width: 80px; margin-bottom: 15px;">
+            <h2>जय श्री राम!</h2>
+            <p>समाज से जुड़ने के लिए लॉगिन करें</p>
+            <button id="login-btn" class="btn-primary">Google लॉगिन</button>
+        </div>
+
+        <div id="profile-container" style="display: none; padding: 15px;">
+            <div class="profile-form-card">
+                <h3 class="form-title">सदस्यता फॉर्म</h3>
+                <div class="form-body">
+                    <p class="input-label">अपनी प्रोफाइल फोटो चुनें</p>
+                    <input type="file" id="user-photo-file" class="input-field" accept="image/*">
+                    <input type="hidden" id="user-photo-url">
+                    
+                    <input type="text" id="user-name" class="input-field" placeholder="पूरा नाम *">
+                    <input type="text" id="user-father" class="input-field" placeholder="पिता का नाम">
+                    <p class="input-label">जन्म तिथि</p>
+                    <input type="date" id="user-dob" class="input-field">
+                    
+                    <input type="text" id="user-gotra" class="input-field" placeholder="गोत्र *">
+                    <input type="tel" id="user-phone" class="input-field" placeholder="मोबाइल नंबर *">
+                    
+                    <select id="user-blood" class="input-field">
+                        <option value="">ब्लड ग्रुप चुनें</option>
+                        <option value="A+">A+</option><option value="B+">B+</option>
+                        <option value="O+">O+</option><option value="AB+">AB+</option>
+                    </select>
+
+                    <input type="text" id="user-profession" class="input-field" placeholder="व्यवसाय (Profession)">
+
+                    <div class="form-section-head">मूल निवास</div>
+                    <input type="text" id="mul-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
+                    <input type="text" id="mul-dist" class="input-field" placeholder="जिला">
+                    <input type="text" id="mul-state" class="input-field" placeholder="राज्य">
+
+                    <div class="form-section-head">वर्तमान निवास</div>
+                    <input type="text" id="cur-gram" class="input-field" placeholder="ग्राम / मोहल्ला">
+                    <input type="text" id="cur-dist" class="input-field" placeholder="जिला *">
+                    <input type="text" id="cur-state" class="input-field" placeholder="राज्य">
+
+                    <button id="save-profile-btn" class="btn-save">प्रोफाइल सुरक्षित करें</button>
+                    <button id="cancel-edit-btn" class="btn-cancel">वापस जाएँ</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-container" style="display: none;">
+            
+            <div class="my-own-card">
+                <div class="my-card-flex">
+                    <div class="my-img-box">
+                        <img id="my-profile-pic" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+                        <button id="edit-profile-btn" class="my-edit-icon"><i class="fa-solid fa-pen"></i></button>
+                    </div>
+                    <div class="my-info-box">
+                        <h2 id="display-my-name">---</h2>
+                        <p><i class="fa-solid fa-user-tie"></i> <span id="display-my-father">---</span></p>
+                        <p><i class="fa-solid fa-calendar-day"></i> <span id="display-my-age">--</span> वर्ष | 📍 <span id="display-my-city">---</span></p>
+                    </div>
+                </div>
+                <button class="btn-invite" onclick="shareAppLink()">
+                    <i class="fa-solid fa-user-plus"></i> सदस्य जोड़ें (लिंक शेष: <span id="link-count">11</span>)
+                </button>
+            </div>
+
+            <div id="admin-tools" class="admin-panel">
+                <h4><i class="fa-solid fa-shield-halved"></i> एडमिन कंट्रोल</h4>
+                <textarea id="notice-input" class="admin-textarea" placeholder="नई सूचना या अलर्ट यहाँ लिखें..."></textarea>
+                <button onclick="updateNotice()" class="admin-action-btn">Update Notice</button>
+            </div>
+
+            <div class="slider-box">
+                <div class="slider-header"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Alerts</div>
+                <div class="swiper swiper-emergency">
+                    <div class="swiper-wrapper" id="emergency-slides">
+                        <div class="swiper-slide empty-slide">अभी कोई आपातकालीन अलर्ट नहीं है।</div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+                <p class="alert-disclaimer">इस अलर्ट की जिम्मेदारी एडमिन की नहीं, भेजने वाले की है।</p>
+            </div>
+
+            <div class="slider-box">
+                <div class="slider-header"><i class="fa-solid fa-bullhorn"></i> सूचना पटल (Notice Board)</div>
+                <div class="swiper swiper-notice">
+                    <div class="swiper-wrapper" id="notice-slides">
+                        <div class="swiper-slide empty-slide">सूचना लोड हो रही है...</div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <div class="section-divider">
+                <span><i class="fa-solid fa-users"></i> नए सदस्य</span>
+            </div>
+            <div id="latest-members-list">
+                </div>
+
+            <div class="search-strip">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="और सदस्य खोजें (नाम, गाँव या जिला)...">
+            </div>
+
+            <div class="alert-action-strip">
+                <button id="send-alert-btn" class="btn-send-alert">
+                    <i class="fa-solid fa-circle-exclamation"></i> समाज को अलर्ट भेजें
+                </button>
+            </div>
+
+            <div class="sahyog-card">
+                <h3><i class="fa-solid fa-hand-holding-heart"></i> सहयोग क्यों करें?</h3>
+                <p>समाज को डिजिटल रूप से एक मंच पर लाने और ऐप के खर्चों के लिए आपका सहयोग अनिवार्य है।</p>
+            </div>
+
+            <footer class="app-footer">
+                Copyright ©️ Kshatriyaparichayak 2026
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script type="module" src="app.js"></script>
+    <script>
+        // साइड मेनू फंक्शन
+        function toggleMenu() {
+            const menu = document.getElementById('side-menu');
+            menu.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

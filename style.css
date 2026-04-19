@@ -12,7 +12,7 @@ body {
     margin: 0;
     padding: 0;
     color: #333;
-    padding-bottom: 50px; /* फुटर के लिए जगह */
+    padding-bottom: 30px; 
 }
 
 /* --- साइड नेविगेशन मेनू --- */
@@ -30,9 +30,7 @@ body {
 .menu-links a {
     padding: 15px 25px; text-decoration: none; font-size: 15px;
     color: #444; display: block; border-bottom: 1px solid #eee;
-    transition: 0.3s;
 }
-.menu-links a:hover { background: #fff5e6; color: var(--saffron); }
 .menu-links i { margin-right: 12px; color: var(--royal-red); }
 
 /* --- रॉयल हेडर --- */
@@ -53,7 +51,7 @@ body {
 }
 .header-logout-btn { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
 
-/* --- माय प्रोफाइल कार्ड (Top Card) --- */
+/* --- माय प्रोफाइल कार्ड --- */
 .my-own-card {
     background: white; margin: 15px; padding: 18px; border-radius: 18px;
     border-top: 5px solid var(--saffron); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -67,77 +65,76 @@ body {
 .my-edit-icon {
     position: absolute; bottom: 0; right: 0; background: var(--saffron);
     color: white; border: none; border-radius: 50%; width: 28px; height: 28px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer;
+    cursor: pointer;
 }
 .my-info-box h2 { margin: 0; font-size: 20px; color: var(--royal-red); }
-.my-info-box p { margin: 4px 0; font-size: 13px; color: #555; }
 .btn-invite {
     width: 100%; margin-top: 15px; background: #27ae60; color: white;
     border: none; padding: 12px; border-radius: 10px; font-weight: bold;
-    font-size: 14px; cursor: pointer; display: flex; justify-content: center; gap: 10px;
+    display: flex; justify-content: center; gap: 10px; cursor: pointer;
 }
 
 /* --- स्लाइडर्स डिजाइन --- */
 .slider-box {
     background: white; margin: 15px; padding: 12px; border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #eee;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
-.slider-header { 
-    font-weight: 600; color: var(--royal-red); font-size: 15px;
-    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
-}
-.swiper { width: 100%; padding-bottom: 25px; }
-.empty-slide { 
-    background: #fffcf0; height: 80px; display: flex; align-items: center; 
-    justify-content: center; font-size: 13px; color: #888; border-radius: 8px; border: 1px dashed #ddd;
-}
-.alert-disclaimer { font-size: 10px; color: #999; text-align: center; margin-top: 5px; font-style: italic; }
+.slider-header { font-weight: 600; color: var(--royal-red); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;}
+.empty-slide { background: #fffcf0; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #888; border-radius: 8px; border: 1px dashed #ddd;}
 
 /* --- सर्च पट्टी --- */
 .search-strip {
-    background: white; margin: 15px; padding: 10px 15px; border-radius: 30px;
-    display: flex; align-items: center; gap: 10px; border: 1px solid var(--saffron);
+    background: white; margin: 15px; padding: 12px 20px; border-radius: 30px;
+    display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--gold);
 }
-.search-strip input { border: none; outline: none; width: 100%; font-family: inherit; }
-.search-strip i { color: var(--saffron); }
+.search-strip input { border: none; outline: none; width: 100%; background: transparent; }
 
-/* --- सदस्य कार्ड्स (Latest Members) --- */
+/* --- एडमिन कंट्रोल पैनल (विशेष डिजाइन) --- */
+.admin-panel {
+    background: #fff9f0; margin: 20px 15px; padding: 18px; border-radius: 15px;
+    border: 2px dashed var(--saffron); box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+.admin-panel h4 { color: var(--royal-red); margin-top: 0; display: flex; align-items: center; gap: 8px; }
+.admin-textarea {
+    width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px;
+    box-sizing: border-box; font-family: inherit; margin-bottom: 12px; resize: none;
+}
+.admin-action-btn {
+    width: 100%; background: var(--royal-red); color: white; border: none;
+    padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;
+}
+
+/* --- अलर्ट भेजें पट्टी --- */
+.alert-action-strip { margin: 10px 15px; }
+.btn-send-alert {
+    width: 100%; background: #e74c3c; color: white; border: none;
+    padding: 15px; border-radius: 12px; font-weight: bold; font-size: 16px;
+    display: flex; justify-content: center; gap: 10px; cursor: pointer;
+}
+
+/* --- सदस्य कार्ड्स --- */
 .profile-card {
     background: white; margin: 10px 15px; padding: 12px; border-radius: 12px;
-    display: flex; gap: 12px; align-items: center; box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-    border-left: 5px solid var(--gold);
+    display: flex; gap: 12px; align-items: center; border-left: 5px solid var(--gold);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-.section-divider { text-align: center; margin: 20px 0; position: relative; }
-.section-divider span { background: var(--cream-bg); padding: 0 15px; color: var(--royal-red); font-weight: bold; z-index: 1; position: relative; }
-.section-divider::after { content: ""; position: absolute; left: 15px; right: 15px; top: 50%; height: 1px; background: #ddd; }
 
-/* --- बटन और फॉर्म्स --- */
-.btn-send-alert {
-    width: 90%; margin: 10px auto; display: flex; justify-content: center; gap: 10px;
-    background: var(--royal-red); color: white; border: none; padding: 14px;
-    border-radius: 12px; font-weight: bold; cursor: pointer;
-}
+.section-divider { text-align: center; margin: 25px 0; position: relative; }
+.section-divider span { background: var(--cream-bg); padding: 0 15px; color: var(--royal-red); font-weight: bold; position: relative; z-index: 1;}
+.section-divider::after { content: ""; position: absolute; left: 15%; right: 15%; top: 50%; height: 1px; background: #ddd; }
+
+/* --- अन्य --- */
 .sahyog-card { background: #fff3e0; margin: 15px; padding: 15px; border-radius: 12px; border: 1px solid var(--saffron); }
-.sahyog-card h3 { margin-top: 0; font-size: 16px; color: #e65100; }
-.sahyog-card p { font-size: 12px; color: #555; margin-bottom: 0; }
+.app-footer { text-align: center; padding: 20px; color: #888; font-size: 12px; }
 
-.app-footer { text-align: center; padding: 25px; color: #aaa; font-size: 11px; }
-
-/* सदस्यता फॉर्म डिजाइन */
-.profile-form-card { background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
-.form-title { background: var(--saffron); color: white; margin: 0; padding: 15px; text-align: center; }
+/* फॉर्म डिजाइन */
+.profile-form-card { background: white; border-radius: 20px; overflow: hidden; }
+.form-title { background: var(--saffron); color: white; padding: 15px; text-align: center; margin: 0; }
 .form-body { padding: 20px; }
 .input-field { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-.form-section-head { color: var(--saffron); font-weight: bold; margin: 15px 0 10px; border-bottom: 1px solid #eee; }
 .btn-save { width: 100%; background: var(--saffron); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; }
-.btn-cancel { width: 100%; background: none; border: none; color: #888; margin-top: 10px; }
+.btn-cancel { width: 100%; background: none; border: none; color: #888; margin-top: 10px; cursor: pointer; }
 
-/* लॉगिन स्क्रीन */
-.welcome-card { 
-    background: white; margin: 40px 20px; padding: 30px; 
-    border-radius: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-}
-.btn-primary { 
-    background: var(--saffron); color: white; border: none; 
-    padding: 12px 30px; border-radius: 25px; font-weight: bold; margin-top: 15px; 
-}
+/* लॉगिन कार्ड */
+.welcome-card { background: white; margin: 40px 20px; padding: 40px 20px; border-radius: 20px; text-align: center; }
+.btn-primary { background: var(--saffron); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; }
